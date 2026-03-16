@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply min-h-screen bg-gray-100; /* Replace with your desired Tailwind background class */
+  }
+
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("/AtkinsonHyperlegibleNext-VariableFont_wght.ttf")
+      format("truetype-variations");
+  }
+
+  @font-face {
+    font-family: "Lexend";
+    src: url("/Lexend-VariableFont_wght.ttf") format("truetype-variations");
+  }
+
+  @font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("/AtkinsonHyperlegibleMono-VariableFont_wght.ttf")
+      format("truetype");
+    font-weight: 400;
+  }
+
+  .heading {
+    font-family: "Lexend", "Atkinson Hyperlegible Next", sans-serif;
+  }
+
+  /* Override daisyui styles */
+  .ptspy-main-menu .menu-active,
+  .ptspy-main-menu .menu-active:hover,
+  .ptspy-main-menu .menu-active:focus {
+    @apply bg-gray-900 font-semibold text-white !important;
+  }
+
+  .ptspy-main-menu a {
+    @apply rounded-md py-2 px-4 !important;
+  }
+
+  .ptspy-sub-menu a {
+    @apply rounded-md !important;
+  }
+
+  .ptspy-sub-menu .menu-active,
+  .ptspy-sub-menu .menu-active:hover,
+  .ptspy-sub-menu .menu-active:focus {
+    @apply bg-gray-200 font-semibold !important;
+  }
+
+  .ptspy-sub-menu a:not(.menu-active):focus,
+  .ptspy-sub-menu a:not(.menu-active):active {
+    @apply bg-white !important;
+  }
+
+  .ptspy-mdcontent :not(.hljs) > code {
+    @apply mx-1 px-1 py-0.5 rounded-sm bg-white text-sm;
+  }
+
+  .ptspy-mdcontent a:link {
+    @apply text-blue-600 no-underline;
+  }
+  .ptspy-mdcontent a:hover {
+    @apply text-blue-400;
+  }
+
+  .ptspy-mdcontent h3 {
+    @apply mb-4;
+  }
+
+  .ptspy-mdcontent p {
+    @apply leading-5;
+    @apply mb-4;
+  }
+}

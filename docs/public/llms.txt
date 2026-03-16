@@ -1,0 +1,23 @@
+# Pts.py
+
+> A Python library for visual composability in code. Built on numpy and Skia. Python 3.10+.
+
+Pts.py explores how visual forms can be composed from simple, atomic operations. It combines functional programming patterns (partial application, pipelines) with numpy-vectorized geometry and Skia-backed rendering.
+
+Design principles:
+- Points as primitives: P(), P2(), P3() create numpy arrays representing coordinates
+- Functional programming features like `@partial` decorator + `TBD` placeholder enable currying. `pipeline(a, b, c)` or `F(a) >> b >> c` chains functions. Supports `lazy=True` and `trace=True`.
+- Vectorized operations: numpy throughout, no Python loops in hot paths
+
+## Documentation
+
+- [Full API documentation with guide](https://ptspy.org/llms-full.txt): Complete reference with quickstart guide and API docs
+- [API reference (markdown)](https://ptspy.org/docs.md): Auto-generated API documentation
+- [Quick start guide](https://ptspy.org/start): Interactive getting started tutorial
+- [Interactive documentation](https://ptspy.org/docs): Searchable API docs with examples
+- [GitHub repository](https://github.com/williamngan/ptspy): Source code
+
+## Optional
+
+- [Interactive notebooks](https://github.com/williamngan/ptspy/tree/main/notebooks): Jupyter notebooks with examples
+- [PyPI package](https://pypi.org/project/ptspy/): Install via pip

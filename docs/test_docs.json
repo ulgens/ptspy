@@ -1,0 +1,2749 @@
+{
+    "typing": [],
+    "packages": {
+        "_": {
+            "module": {},
+            "classes": {
+                "Rectangle": {
+                    "docstring": {
+                        "Summary": [
+                            "A class for various static helper methods related to rectangles."
+                        ]
+                    },
+                    "source": [
+                        "/geom.py",
+                        8
+                    ],
+                    "methods": {
+                        "size": {
+                            "docstring": {
+                                "Summary": [
+                                    "Calculate the size of a rectangle.",
+                                    "\n",
+                                    "This static method takes a rectangle defined by two points (top-left and bottom-right)",
+                                    "and returns the width and height as a 2D array."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "rect",
+                                        "type": [
+                                            "PArray"
+                                        ],
+                                        "info": [
+                                            "An array with shape (2, 2) representing the rectangle, where rect[0] is the top-left point and rect[1] is the bottom-right point."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "PArray"
+                                    ],
+                                    "info": [
+                                        "A 2D array where the first element is the width and the second element is the height."
+                                    ]
+                                },
+                                "Examples": ">>> rect = np.array([[0, 0], [10, 20]])\n>>> size = MyClass.size(rect)\n>>> size\narray([10, 20])"
+                            },
+                            "source": [
+                                "/geom.py",
+                                12
+                            ],
+                            "static": true
+                        },
+                        "center": {
+                            "docstring": {
+                                "Summary": [
+                                    "Calculate the center point of a rectangle.",
+                                    "\n",
+                                    "This method takes a rectangle defined by two points (top-left and bottom-right)",
+                                    "and returns the center point as a 2D array."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "rect",
+                                        "type": [
+                                            "PArray"
+                                        ],
+                                        "info": [
+                                            "An array with shape (2, 2) representing the rectangle, where rect[0] is the top-left point and rect[1] is the bottom-right point."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "PArray"
+                                    ],
+                                    "info": [
+                                        "A 2D array where the first element is the x-coordinate and the second element is the y-coordinate of the center point."
+                                    ]
+                                },
+                                "Examples": ">>> rect = np.array([[0, 0], [10, 20]])\n>>> center = MyClass.center(rect)\n>>> center\narray([5.0, 10.0])"
+                            },
+                            "source": [
+                                "/geom.py",
+                                34
+                            ],
+                            "static": true
+                        },
+                        "fromTopLeft": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a rectangle from the top-left corner and size.",
+                                    "\n",
+                                    "This method takes the top-left point of a rectangle and its size (width and height),",
+                                    "and returns the rectangle defined by the top-left and bottom-right points."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "topLeft",
+                                        "type": [
+                                            "PArray"
+                                        ],
+                                        "info": [
+                                            "A 2D array representing the top-left point of the rectangle."
+                                        ]
+                                    },
+                                    {
+                                        "name": "size",
+                                        "type": [
+                                            "PArrayOrScalar"
+                                        ],
+                                        "info": [
+                                            "A 2D array or scalar representing the size of the rectangle. If a scalar is provided, it is used for both width and height."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "PArray"
+                                    ],
+                                    "info": [
+                                        "A 2D array where the first row is the top-left point and the second row is the bottom-right point."
+                                    ]
+                                },
+                                "Examples": ">>> topLeft = np.array([0, 0])\n>>> size = np.array([10, 20])\n>>> rect = MyClass.fromTopLeft(topLeft, size)\n>>> rect\narray([[ 0,  0],\n       [10, 20]])"
+                            },
+                            "source": [
+                                "/geom.py",
+                                57
+                            ],
+                            "static": true
+                        },
+                        "fromCenter": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a bounding box from a center point and size."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "center",
+                                        "type": [
+                                            "PArray"
+                                        ],
+                                        "info": [
+                                            "The center point of the bounding box."
+                                        ]
+                                    },
+                                    {
+                                        "name": "size",
+                                        "type": [
+                                            "PArrayOrScalar"
+                                        ],
+                                        "info": [
+                                            "The size of the bounding box. Can be a scalar or an array specifying the size along each dimension."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "P"
+                                    ],
+                                    "info": [
+                                        "A bounding box with coordinates calculated from the center and size."
+                                    ]
+                                },
+                                "Examples": ">>> center = np.array([5, 5])\n>>> size = 4\n>>> bbox = P.fromCenter(center, size)\n>>> bbox\nP(array([3., 3.]), array([7., 7.]))\n\n>>> size = np.array([4, 6])\n>>> bbox = P.fromCenter(center, size)\n>>> bbox\nP(array([3., 2.]), array([7., 8.]))"
+                            },
+                            "source": [
+                                "/geom.py",
+                                83
+                            ],
+                            "static": true
+                        },
+                        "helper": {
+                            "docstring": {
+                                "Summary": [
+                                    "Determine the bounds of a 2D rectangle and provide semantic access to its corners."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "data",
+                                        "type": [
+                                            "PArrayOrList"
+                                        ],
+                                        "info": [
+                                            "An array either in the form of [width, height] or [[x1, y1], [x2, y2]]."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "dict"
+                                    ],
+                                    "info": [
+                                        "A dictionary with keys 'tl' (top left), 'tr' (top right), 'bl' (bottom left), and 'br' (bottom right) representing the corners of the rectangle. It also contains 'top', 'left', 'right', and 'bottom' representing the sides of the rectangle."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "data"
+                                            },
+                                            "does not match the expected formats."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> data = [10, 5]\n>>> bounds = P.helper(data)\n>>> bounds['tl']\nP([0, 0])\n>>> bounds['br']\nP([10, 5])\n\n>>> data = [[2, 3], [5, 7]]\n>>> bounds = P.helper(data)\n>>> bounds['tl']\nP([2, 3])\n>>> bounds['br']\nP([5, 7])"
+                            },
+                            "source": [
+                                "/geom.py",
+                                109
+                            ],
+                            "static": true
+                        }
+                    }
+                },
+                "Circle": {
+                    "docstring": {
+                        "Summary": [
+                            "A class for various static helper methods related to circles."
+                        ]
+                    },
+                    "source": [
+                        "/geom.py",
+                        174
+                    ],
+                    "methods": {
+                        "fromCenter": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a bounding box from a center point and radius."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "center",
+                                        "type": [
+                                            "PArray"
+                                        ],
+                                        "info": [
+                                            "The center point of the bounding box."
+                                        ]
+                                    },
+                                    {
+                                        "name": "radius",
+                                        "type": [
+                                            "PArrayOrScalar"
+                                        ],
+                                        "info": [
+                                            "The radius of the bounding box. Can be a scalar or an array specifying the radius along each dimension."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "P"
+                                    ],
+                                    "info": [
+                                        "A bounding box with coordinates calculated from the center and radius."
+                                    ]
+                                },
+                                "Examples": ">>> center = np.array([5, 5])\n>>> radius = 2\n>>> bbox = P.fromCenter(center, radius)\n>>> bbox\nP([3, 3], [7, 7])\n\n>>> radius = np.array([2, 3])\n>>> bbox = P.fromCenter(center, radius)\n>>> bbox\nP([3, 2], [7, 8])"
+                            },
+                            "source": [
+                                "/geom.py",
+                                178
+                            ],
+                            "static": true
+                        }
+                    }
+                },
+                "Form": {
+                    "docstring": {
+                        "Summary": [
+                            "A class to create a canvas for drawing shapes and text."
+                        ]
+                    },
+                    "source": [
+                        "/form.py",
+                        293
+                    ],
+                    "methods": {
+                        "createRasterCanvas": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a skia.Canvas that uses raster as its backend. For convenience, you can also use",
+                                    {
+                                        "ref": [
+                                            "@frame",
+                                            [
+                                                "pts",
+                                                "frame"
+                                            ]
+                                        ]
+                                    },
+                                    "decorator instead.",
+                                    "\n",
+                                    "This method creates a",
+                                    {
+                                        "code": "skia.Surface"
+                                    },
+                                    "with the specified width and height,",
+                                    "and returns the canvas associated with that surface."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The width of the canvas."
+                                        ]
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The height of the canvas."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "skia.Canvas"
+                                    ],
+                                    "info": [
+                                        "A canvas object for raster drawing."
+                                    ]
+                                },
+                                "Examples": ">>> canvas = Form.createRasterCanvas(800, 600)"
+                            },
+                            "source": [
+                                "/form.py",
+                                299
+                            ],
+                            "static": true
+                        },
+                        "createGLCanvas": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a skia.Canvas that uses OpenGL as its backend. glfw.init() and a glfw window must be created before calling this function."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "skia.Canvas"
+                                    ],
+                                    "info": [
+                                        "the canvas"
+                                    ]
+                                },
+                                "Data": {
+                                    "internal": true
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                320
+                            ],
+                            "static": true
+                        },
+                        "createGLWindow": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create an OpenGL window with the specified width, height, and title."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The width of the window in pixels."
+                                        ]
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The height of the window in pixels."
+                                        ]
+                                    },
+                                    {
+                                        "name": "title",
+                                        "type": [
+                                            "str",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The title of the window. Default is \"Demo\"."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Any"
+                                    ],
+                                    "info": [
+                                        "The created OpenGL window context."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "RuntimeError",
+                                        "info": [
+                                            "If OpenGL is not ready or if the window creation fails."
+                                        ]
+                                    }
+                                ],
+                                "Data": {
+                                    "internal": true
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                351
+                            ],
+                            "static": true
+                        },
+                        "setup": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a Form object with a raster canvas backend."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The width of the canvas in pixels."
+                                        ]
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The height of the canvas in pixels."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "A Form object initialized with a raster canvas backend."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form.setup(800, 600)\n>>> # Use the form object for drawing or other operations."
+                            },
+                            "source": [
+                                "/form.py",
+                                387
+                            ]
+                        },
+                        "setupGL": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create a Form object with an OpenGL canvas backend."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The width of the canvas in pixels."
+                                        ]
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": [
+                                            "int"
+                                        ],
+                                        "info": [
+                                            "The height of the canvas in pixels."
+                                        ]
+                                    },
+                                    {
+                                        "name": "window",
+                                        "type": [
+                                            "Any",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "An existing OpenGL window context. If None, a new window will be created. Default is None."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "A Form object initialized with an OpenGL canvas backend."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "RuntimeError",
+                                        "info": [
+                                            "If OpenGL is not ready."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form.setupGL(800, 600)\n>>> # Use the form object for OpenGL rendering."
+                            },
+                            "source": [
+                                "/form.py",
+                                405
+                            ]
+                        },
+                        "renderGL": {
+                            "docstring": {
+                                "Summary": [
+                                    "Render using an OpenGL context in a loop until the user closes the window."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "window",
+                                        "type": [
+                                            "Any"
+                                        ],
+                                        "info": [
+                                            "The OpenGL window context."
+                                        ]
+                                    },
+                                    {
+                                        "name": "renderFn",
+                                        "type": [
+                                            "Any"
+                                        ],
+                                        "info": [
+                                            "A function that performs rendering. It should take the window context as an argument."
+                                        ]
+                                    }
+                                ],
+                                "Raises": [
+                                    {
+                                        "exception": "RuntimeError",
+                                        "info": [
+                                            "If OpenGL is not ready."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> def render(window):\n>>>     # Your rendering code here\n>>>     pass\n>>> window = Form.createGLWindow(800, 600)\n>>> Form.renderGL(window, render)\n",
+                                "Data": {
+                                    "internal": true
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                434
+                            ],
+                            "static": true
+                        },
+                        "__init__": {
+                            "docstring": {
+                                "Summary": [
+                                    "Initialize a Form object with a specified canvas, width, and height."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "canvas",
+                                        "type": [
+                                            "skia.Canvas",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "An existing Skia canvas. If None, a new raster canvas is created with the specified width and height. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "int",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The width of the canvas in pixels. Default is 512."
+                                        ]
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": [
+                                            "int",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The height of the canvas in pixels. Default is 512."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form(width=800, height=600)\n>>> # Use the form object for drawing."
+                            },
+                            "source": [
+                                "/form.py",
+                                475
+                            ]
+                        },
+                        "width": {
+                            "docstring": {
+                                "Summary": [
+                                    "Get the width of the canvas."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "int"
+                                    ],
+                                    "info": [
+                                        "The width of the canvas in pixels."
+                                    ]
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                512
+                            ]
+                        },
+                        "height": {
+                            "docstring": {
+                                "Summary": [
+                                    "Get the height of the canvas."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "int"
+                                    ],
+                                    "info": [
+                                        "The height of the canvas in pixels."
+                                    ]
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                522
+                            ]
+                        },
+                        "size": {
+                            "docstring": {
+                                "Summary": [
+                                    "Get the size of the canvas as [width, height]."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "PArray"
+                                    ],
+                                    "info": [
+                                        "A PArray of [width, height]"
+                                    ]
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                532
+                            ]
+                        },
+                        "stroke": {
+                            "docstring": {
+                                "Summary": [
+                                    "Configure stroke properties for subsequent drawing operations.",
+                                    "\n",
+                                    "Sets attributes like stroke color, line width, line cap style, line join style, and miter limit. These settings apply to all subsequent stroked shapes drawn using this context.",
+                                    "\n",
+                                    "Note: when using a single int to represent RGBA color, set the",
+                                    {
+                                        "code": "hasAlpha"
+                                    },
+                                    "parameter to avoid ambiguity.",
+                                    "\n",
+                                    "If no argument is provided, the stroke color is cleared."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "color",
+                                        "type": [
+                                            "ColorOrShader",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke color. Can be an RGB/RGBA array-like object ([255,0,0,255]), an RGB/RGBA string (\"#ff0000ff\"), or an RGB/RGBA int (0xff0000ff) or a skia Shader. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke width. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "cap",
+                                        "type": [
+                                            "StrokeJoinCap",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke cap style (\"bevel\", \"round\", \"miter\", or \"last\"). Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "join",
+                                        "type": [
+                                            "StrokeJoinCap",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke join style (\"bevel\", \"round\", \"miter\", or \"last\"). Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "miter",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke miter limit. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "hasAlpha",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Optionally set whether the color value has alpha channel. This is only necessary for RGBA color integer less than 0xffffff, where heuristics can become ambiguous."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The current Form object with updated stroke properties."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.stroke(\"#ff0000\", width=2.0, cap=\"round\", join=\"miter\", miter=10.0)\n>>> # Use the form object for drawing with the specified stroke properties."
+                            },
+                            "source": [
+                                "/form.py",
+                                541
+                            ]
+                        },
+                        "fill": {
+                            "docstring": {
+                                "Summary": [
+                                    "Configure fill properties for subsequent drawing operations. The fill can be colors value or shader for the object's paint.",
+                                    "\n",
+                                    "Note: when using a single int to represent RGBA color, set the",
+                                    {
+                                        "code": "hasAlpha"
+                                    },
+                                    "parameter to avoid ambiguity.",
+                                    "\n",
+                                    "If no argument is provided, the fill color is cleared."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "color",
+                                        "type": [
+                                            "ColorOrShader",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The fill color or a",
+                                            {
+                                                "link": [
+                                                    "https://kyamagu.github.io/skia-python/reference/skia.Shader.html",
+                                                    "skia.Shader"
+                                                ]
+                                            },
+                                            "object. Color can be an RGB/RGBA array-like object ([255,0,0,255]), an RGB/RGBA string (\"#ff0000ff\"), or an RGB/RGBA int (0xff0000ff). Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "hasAlpha",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Optionally set whether the color value has alpha channel. This is only necessary for RGBA color integer less than 0xffffff, where heuristics can become ambiguous."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The current Form instance with updated stroke properties."
+                                    ]
+                                },
+                                "Examples": ">>> form.fill(0xFF00FFFF)  # Set fill color to pink\n>>> form.fill(skia.Shader.MakeLinearGradient(...))  # Set fill shader"
+                            },
+                            "source": [
+                                "/form.py",
+                                601
+                            ]
+                        },
+                        "fillOnly": {
+                            "docstring": {
+                                "Summary": [
+                                    "Set the fill color and disable the stroke for the form instance. See",
+                                    {
+                                        "code": "fill"
+                                    },
+                                    "and",
+                                    {
+                                        "code": "stroke"
+                                    },
+                                    "for details."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "color",
+                                        "type": [
+                                            "ColorOrShader",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The fill color or a",
+                                            {
+                                                "link": [
+                                                    "https://kyamagu.github.io/skia-python/reference/skia.Shader.html",
+                                                    "skia.Shader"
+                                                ]
+                                            },
+                                            "object. Color can be an RGB/RGBA array-like object ([255,0,0,255]), an RGB/RGBA string (\"#ff0000ff\"), or an RGB/RGBA int (0xff0000ff). Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "hasAlpha",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Optionally set whether the color value has alpha channel. This is only necessary for RGBA color integer less than 0xffffff, where heuristics can become ambiguous."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.fillOnly(\"#ff0000\")  # Set fill color to red and disable stroke"
+                            },
+                            "source": [
+                                "/form.py",
+                                632
+                            ]
+                        },
+                        "strokeOnly": {
+                            "docstring": {
+                                "Summary": [
+                                    "Set the stroke color and disable the stroke for the form instance. See",
+                                    {
+                                        "code": "fill"
+                                    },
+                                    "and",
+                                    {
+                                        "code": "stroke"
+                                    },
+                                    "for details."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "color",
+                                        "type": [
+                                            "ColorLike",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke color. Can be an RGB/RGBA array-like object ([255,0,0,255]), an RGB/RGBA string (\"#ff0000ff\"), or an RGB/RGBA int (0xff0000ff). Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "width",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke width. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "cap",
+                                        "type": [
+                                            "StrokeJoinCap",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke cap style. Can be \"bevel\", \"round\", \"miter\", or \"last\". Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "join",
+                                        "type": [
+                                            "StrokeJoinCap",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke join style. Can be \"bevel\", \"round\", \"miter\", or \"last\". Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "miter",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The stroke miter limit. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "hasAlpha",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Optionally set whether the color value has alpha channel. This is only necessary for RGBA color integer less than 0xffffff, where heuristics can become ambiguous."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.strokeOnly(\"#00ff00\", width=2.0, cap=\"round\", join=\"miter\", miter=10.0)  # Set stroke properties and disable fill"
+                            },
+                            "source": [
+                                "/form.py",
+                                649
+                            ]
+                        },
+                        "clear": {
+                            "docstring": {
+                                "Summary": [
+                                    "Clear the canvas with the specified color.",
+                                    "\n",
+                                    "This method fills the entire canvas with the specified color, effectively clearing any existing drawings."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "color",
+                                        "type": [
+                                            "ColorLike"
+                                        ],
+                                        "info": [
+                                            "The color to clear the canvas with. Can be an RGB/RGBA array-like object ([255, 0, 0, 255]), an RGB/RGBA string (\"#ff0000ff\"), or an RGB/RGBA int (0xff0000ff)."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.clear(\"#ffffff\")  # Clear the canvas with white color"
+                            },
+                            "source": [
+                                "/form.py",
+                                678
+                            ]
+                        },
+                        "surface": {
+                            "docstring": {
+                                "Summary": [
+                                    "Get the Skia surface associated with the canvas."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "skia.Surface"
+                                    ],
+                                    "info": [
+                                        "The surface of the canvas."
+                                    ]
+                                }
+                            },
+                            "source": [
+                                "/form.py",
+                                697
+                            ]
+                        },
+                        "dots": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw dots at the specified points on the canvas. For simple visualization of points, this method is faster than using",
+                                    {
+                                        "code": "point()"
+                                    },
+                                    "."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points. Can be of shape (n, 2) or (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, 2) or (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> points = np.array([[10, 10], [20, 20], [30, 30]])\n>>> form.dots(points)  # Draw dots at the specified points"
+                            },
+                            "source": [
+                                "/form.py",
+                                707
+                            ]
+                        },
+                        "point": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw a point on the canvas with the specified style."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pt",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "The coordinates of the point. Should be a 2-element array or list [x, y]."
+                                        ]
+                                    },
+                                    {
+                                        "name": "radius",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The radius of the point. Default is 5.0."
+                                        ]
+                                    },
+                                    {
+                                        "name": "style",
+                                        "type": [
+                                            "PointStyle",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The style of the point. Can be \"circle\" or \"rect\". Default is \"circle\"."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.point([50, 50], radius=10.0, style=\"circle\")  # Draw a circle point\n>>> form.point([100, 100], radius=5.0, style=\"rect\")  # Draw a rectangle point"
+                            },
+                            "source": [
+                                "/form.py",
+                                739
+                            ]
+                        },
+                        "points": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw multiple points on the canvas with the specified style."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points of (n, 2) shape for [x,y] positions, or (n, 3) shape for [x, y, radius]."
+                                        ]
+                                    },
+                                    {
+                                        "name": "radius",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The radius of each point. Default is 5.0."
+                                        ]
+                                    },
+                                    {
+                                        "name": "style",
+                                        "type": [
+                                            "PointStyle",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The style of each point. Can be \"circle\" or \"rect\". Default is \"circle\"."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> points = np.array([[50, 50], [100, 100], [150, 150]])\n>>> form.points(points, radius=10.0, style=\"circle\")  # Draw multiple circle points"
+                            },
+                            "source": [
+                                "/form.py",
+                                762
+                            ]
+                        },
+                        "line": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw lines on the canvas.",
+                                    "\n",
+                                    "This method draws a continuous polyline if the input is of shape (n, 2), or multiple line segments if the input is of shape (n, 2, 2)."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points. Can be of shape (n, 2) to draw a continuous polyline, or shape (n, 2, 2) to draw multiple line segments."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, 2) or (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> continuous_line = np.array([[10, 10], [20, 20], [30, 30]])\n>>> form.line(continuous_line)  # Draw a continuous polyline\n>>> segments = np.array([[[10, 10], [20, 20]], [[30, 30], [40, 40]]])\n>>> form.line(segments)  # Draw multiple line segments"
+                            },
+                            "source": [
+                                "/form.py",
+                                799
+                            ]
+                        },
+                        "lines": {
+                            "docstring": {
+                                "Summary": [
+                                    "Same as",
+                                    {
+                                        "link": [
+                                            "pts.form.line",
+                                            "`line`"
+                                        ]
+                                    },
+                                    ". Additional function name for clarity when applied to multiple lines."
+                                ]
+                            },
+                            "source": [
+                                "/form.py",
+                                838
+                            ]
+                        },
+                        "rect": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw a rectangle on the canvas.",
+                                    "\n",
+                                    "This method draws a rectangle using the coordinates of two diagonal corners."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the diagonal corners of the rectangle. Should be of shape (2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> corners = np.array([[10, 10], [50, 50]])\n>>> form.rect(corners)  # Draw a rectangle from (10, 10) to (50, 50)"
+                            },
+                            "source": [
+                                "/form.py",
+                                846
+                            ]
+                        },
+                        "rects": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw multiple rectangles on the canvas.",
+                                    "\n",
+                                    "This method draws multiple rectangles using the coordinates of their diagonal corners."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the diagonal corners of each rectangle. Should be of shape (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> rectangles = np.array([[[10, 10], [50, 50]], [[60, 60], [100, 100]]])\n>>> form.rects(rectangles)  # Draw two rectangles"
+                            },
+                            "source": [
+                                "/form.py",
+                                869
+                            ]
+                        },
+                        "circle": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw an oval (circle or ellipse) on the canvas.",
+                                    "\n",
+                                    "This method draws an oval using the coordinates of two diagonal corners of the bounding rectangle."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the diagonal corners of the bounding rectangle. Should be of shape (2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> corners = np.array([[10, 10], [50, 50]])\n>>> form.circle(corners)  # Draw an oval from (10, 10) to (50, 50)"
+                            },
+                            "source": [
+                                "/form.py",
+                                899
+                            ]
+                        },
+                        "circles": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw multiple ovals (circles or ellipses) on the canvas.",
+                                    "\n",
+                                    "This method draws multiple ovals using the coordinates of their diagonal corners of the bounding rectangles."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the diagonal corners of each bounding rectangle. Should be of shape (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> ovals = np.array([[[10, 10], [50, 50]], [[60, 60], [100, 100]]])\n>>> form.circles(ovals)  # Draw two ovals"
+                            },
+                            "source": [
+                                "/form.py",
+                                922
+                            ]
+                        },
+                        "ellipse": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw an ellipse on the canvas.",
+                                    "\n",
+                                    "This method draws an ellipse using the coordinates of two diagonal corners of the bounding rectangle. Optionally, it can draw a rotated ellipse or an elliptical arc."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the diagonal corners of the bounding rectangle. Should be of shape (2, 2)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "rotation",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The rotation angle in degrees. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "startAngle",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The starting angle in degrees for the arc. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "endAngle",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The ending angle in degrees for the arc. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "counterClockwise",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether the arc is drawn counterclockwise. Default is False."
+                                        ]
+                                    },
+                                    {
+                                        "name": "wedge",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether to draw a wedge instead of an arc. Default is False."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> corners = np.array([[10, 10], [50, 50]])\n>>> form.ellipse(corners)  # Draw an ellipse\n>>> form.ellipse(corners, rotation=45)  # Draw a rotated ellipse\n>>> form.ellipse(corners, startAngle=0, endAngle=180)  # Draw an arc"
+                            },
+                            "source": [
+                                "/form.py",
+                                950
+                            ]
+                        },
+                        "ellipses": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw multiple ellipses on the canvas.",
+                                    "\n",
+                                    "This method draws multiple ellipses using the coordinates of their diagonal corners of the bounding rectangles. Optionally, it can draw rotated ellipses or elliptical arcs."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the diagonal corners of each bounding rectangle. Should be of shape (n, 2, 2)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "rotation",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The rotation angle in degrees for each ellipse. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "startAngle",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The starting angle in degrees for each arc. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "endAngle",
+                                        "type": [
+                                            "float",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The ending angle in degrees for each arc. Default is None."
+                                        ]
+                                    },
+                                    {
+                                        "name": "counterClockwise",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether each arc is drawn counterclockwise. Default is False."
+                                        ]
+                                    },
+                                    {
+                                        "name": "wedge",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether to draw wedges instead of arcs. Default is False."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, 2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> ellipses = np.array([[[10, 10], [50, 50]], [[60, 60], [100, 100]]])\n>>> form.ellipses(ellipses)  # Draw multiple ellipses\n>>> form.ellipses(ellipses, rotation=45)  # Draw multiple rotated ellipses\n>>> form.ellipses(ellipses, startAngle=0, endAngle=180)  # Draw multiple arcs"
+                            },
+                            "source": [
+                                "/form.py",
+                                1000
+                            ]
+                        },
+                        "polygon": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw a polygon on the canvas.",
+                                    "\n",
+                                    "This method draws a polygon using the provided points. Optionally, the polygon can be closed to form a complete shape."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the vertices of the polygon. Should be of shape (n, 2)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "closed",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether to close the polygon by connecting the last point to the first. Default is True."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> vertices = np.array([[10, 10], [50, 50], [50, 10]])\n>>> form.polygon(vertices)  # Draw a closed triangle\n>>> form.polygon(vertices, closed=False)  # Draw an open polyline"
+                            },
+                            "source": [
+                                "/form.py",
+                                1045
+                            ]
+                        },
+                        "polygons": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw multiple polygons on the canvas.",
+                                    "\n",
+                                    "This method draws multiple polygons using the provided points. Optionally, each polygon can be closed to form complete shapes."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the vertices of each polygon. Should be of shape (n, m, 2), where n is the number of polygons and m is the number of vertices per polygon."
+                                        ]
+                                    },
+                                    {
+                                        "name": "closed",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether to close each polygon by connecting the last point to the first. Default is True."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "pts"
+                                            },
+                                            "is not of shape (n, m, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> polygons = np.array([[[10, 10], [50, 50], [50, 10]], [[60, 60], [100, 100], [100, 60]]])\n>>> form.polygons(polygons)  # Draw multiple closed triangles"
+                            },
+                            "source": [
+                                "/form.py",
+                                1079
+                            ]
+                        },
+                        "bezier": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw a 2D B\u00e9zier curve on the canvas.",
+                                    "\n",
+                                    "This method draws a B\u00e9zier curve using the provided control points. Optionally, the curve can be closed to form a complete shape.",
+                                    "\n",
+                                    "If the number of input points doesn't match (start + k cubic segments), the extraneous points will be truncated automatically."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "pts",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "An array of points specifying the control points of the B\u00e9zier curve. Should be of shape (n, 2)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "closed",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether to close the curve by connecting the last point to the first. Default is False."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> control_points = np.array([[10, 10], [20, 30], [30, 10], [40, 30]])\n>>> form.bezier(control_points)  # Draw an open B\u00e9zier curve\n>>> form.bezier(control_points, closed=True)  # Draw a closed B\u00e9zier curve"
+                            },
+                            "source": [
+                                "/form.py",
+                                1109
+                            ]
+                        },
+                        "font": {
+                            "docstring": {
+                                "Summary": [
+                                    "Set the font style for text drawing."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "size",
+                                        "type": [
+                                            "int",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The size of the font. Default is 12."
+                                        ]
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": [
+                                            "str",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The name of the font. Default is \"Arial\"."
+                                        ]
+                                    },
+                                    {
+                                        "name": "bold",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether the font is bold. Default is False."
+                                        ]
+                                    },
+                                    {
+                                        "name": "italic",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether the font is italic. Default is False."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.font(size=16, name=\"Times New Roman\", bold=True)  # Set font to 16pt Times New Roman, bold"
+                            },
+                            "source": [
+                                "/form.py",
+                                1151
+                            ]
+                        },
+                        "text": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw text on the canvas at the specified position."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "txt",
+                                        "type": [
+                                            "str"
+                                        ],
+                                        "info": [
+                                            "The text string to draw."
+                                        ]
+                                    },
+                                    {
+                                        "name": "pt",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "The position to draw the text. Should be a 2-element array or list [x, y]."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> form.font(size=16, name=\"Arial\", bold=True)\n>>> form.text(\"Hello, World!\", [50, 50])  # Draw text at position (50, 50)"
+                            },
+                            "source": [
+                                "/form.py",
+                                1181
+                            ]
+                        },
+                        "colorMap": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw a color map that visualizes a 2D array of colors within a specified rectangle, using either rectangles or circles to represent each cell in the array.",
+                                    "\n",
+                                    "This is currently non-vectorized but can draw different styles (rectangles or circles). For large arrays, consider using",
+                                    {
+                                        "code": "colorMapVectorized"
+                                    },
+                                    "for better performance."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "table",
+                                        "type": [
+                                            "IntArray"
+                                        ],
+                                        "info": [
+                                            "A 2D array of colors of shape (n, m)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "rect",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "The rectangle in which to draw the color map. Should be of shape (2, 2)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "style",
+                                        "type": [
+                                            "PointStyle",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The style of each cell. Can be \"rect\" or \"circle\". Default is \"rect\"."
+                                        ]
+                                    },
+                                    {
+                                        "name": "useCeiling",
+                                        "type": [
+                                            "bool",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "Whether to use the ceiling value for cell sizes. Default is False."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "table"
+                                            },
+                                            "is not of shape (n, m) or",
+                                            {
+                                                "code": "rect"
+                                            },
+                                            "is not of shape (2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> table = np.array([[0xFF0000, 0x00FF00], [0x0000FF, 0xFFFF00]])\n>>> rect = np.array([[10, 10], [110, 110]])\n>>> form.colorMap(table, rect, style=\"rect\")  # Draw a color map with rectangles"
+                            },
+                            "source": [
+                                "/form.py",
+                                1202
+                            ]
+                        },
+                        "colorMapFast": {
+                            "docstring": {
+                                "Summary": [
+                                    "Draw a color map that visualizes a 2D array of colors within a specified rectangle, using either rectangles or circles to represent each cell in the array.",
+                                    "\n",
+                                    "This is the vectorized version of",
+                                    {
+                                        "code": "colorMap"
+                                    },
+                                    ", which is optimized for performance with large arrays."
+                                ],
+                                "Args": [
+                                    {
+                                        "name": "table",
+                                        "type": [
+                                            "IntArray"
+                                        ],
+                                        "info": [
+                                            "A 2D array of colors of shape (n, m)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "rect",
+                                        "type": [
+                                            "NumberSequence"
+                                        ],
+                                        "info": [
+                                            "The rectangle in which to draw the color map. Should be of shape (2, 2)."
+                                        ]
+                                    },
+                                    {
+                                        "name": "filterMode",
+                                        "type": [
+                                            "str",
+                                            "optional"
+                                        ],
+                                        "info": [
+                                            "The filtering mode for the color map. Can be \"nearest\" or \"linear\". Default is \"nearest\"."
+                                        ]
+                                    }
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "Form"
+                                    ],
+                                    "info": [
+                                        "The instance of the object, to allow for method chaining."
+                                    ]
+                                },
+                                "Raises": [
+                                    {
+                                        "exception": "ValueError",
+                                        "info": [
+                                            "If",
+                                            {
+                                                "code": "table"
+                                            },
+                                            "is not of shape (n, m) or",
+                                            {
+                                                "code": "rect"
+                                            },
+                                            "is not of shape (2, 2)."
+                                        ]
+                                    }
+                                ],
+                                "Examples": ">>> form = Form()\n>>> table = np.array([[0xFF0000, 0x00FF00], [0x0000FF, 0xFFFF00]])\n>>> rect = np.array([[10, 10], [110, 110]])\n>>> form.colorMapVectorized(table, rect)"
+                            },
+                            "source": [
+                                "/form.py",
+                                1252
+                            ]
+                        },
+                        "toImage": {
+                            "docstring": {
+                                "Summary": [
+                                    "Create an image snapshot of the current canvas."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "skia.Image"
+                                    ],
+                                    "info": [
+                                        "An image snapshot of the current canvas, or None if the surface is not available."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> image = form.toImage()\n>>> # Use the image for saving to a file or other operations."
+                            },
+                            "source": [
+                                "/form.py",
+                                1329
+                            ]
+                        },
+                        "toArray": {
+                            "docstring": {
+                                "Summary": [
+                                    "Convert the current canvas to a NumPy array.",
+                                    "\n",
+                                    "This method captures the canvas content as a NumPy array with RGBA color format."
+                                ],
+                                "Returns": {
+                                    "type": [
+                                        "np.ndarray"
+                                    ],
+                                    "info": [
+                                        "A NumPy array representing the canvas content."
+                                    ]
+                                },
+                                "Examples": ">>> form = Form()\n>>> arr = form.toArray()\n>>> # Use the array for image processing or other operations."
+                            },
+                            "source": [
+                                "/form.py",
+                                1347
+                            ]
+                        }
+                    }
+                }
+            },
+            "functions": {
+                "P": {
+                    "docstring": {
+                        "Summary": [
+                            "Create an array of floats from array-like inputs.",
+                            "\n",
+                            "Accepts either individual numeric elements or collections (lists, tuples, arrays). If multiple arguments are given, each becomes an element or row in the resulting array. If a single collection is provided, its contents form the array directly."
+                        ],
+                        "Args": [
+                            {
+                                "name": "*args",
+                                "type": [
+                                    "PArrayLike"
+                                ],
+                                "info": [
+                                    "Numeric elements or array-like objects to convert."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "PArray"
+                            ],
+                            "info": [
+                                "An array with float values."
+                            ]
+                        },
+                        "Examples": ">>> P(1, 2, 3)\narray([1., 2., 3.])\n\n>>> P([1, 2, 3])\narray([1., 2., 3.])\n\n>>> P([1, 2, 3], [3, 4, 5])\narray([[1., 2., 3.],\n       [3., 4., 5.]])"
+                    },
+                    "source": [
+                        "/pts.py",
+                        6
+                    ]
+                },
+                "P2": {
+                    "docstring": {
+                        "Summary": [
+                            "Create a 2D grid of coordinate points from x and y arrays.",
+                            "\n",
+                            "Given arrays of x and y coordinates, this function generates a structured grid. Each point on the grid pairs an x-value with a y-value, arranged into a 2D array."
+                        ],
+                        "Args": [
+                            {
+                                "name": "xs",
+                                "type": [
+                                    "PArrayLike"
+                                ],
+                                "info": [
+                                    "Array-like sequence of x-coordinates."
+                                ]
+                            },
+                            {
+                                "name": "ys",
+                                "type": [
+                                    "PArrayLike"
+                                ],
+                                "info": [
+                                    "Array-like sequence of y-coordinates."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "PArray"
+                            ],
+                            "info": [
+                                "An array shaped (len(ys), len(xs), 2), containing coordinate pairs."
+                            ]
+                        },
+                        "Examples": ">>> P2([1, 2, 3], [4, 5])\narray([[[1., 4.],\n        [2., 4.],\n        [3., 4.]],\n\n       [[1., 5.],\n        [2., 5.],\n        [3., 5.]]])"
+                    },
+                    "source": [
+                        "/pts.py",
+                        37
+                    ]
+                },
+                "P3": {
+                    "docstring": {
+                        "Summary": [
+                            "Create a 3D grid of points from arrays of x, y, and z coordinates.",
+                            "\n",
+                            "Given sequences of coordinates along three axes, this function produces a structured, cube-shaped grid. Each point in the grid combines one x, one y, and one z value, arranged in a 3D array."
+                        ],
+                        "Args": [
+                            {
+                                "name": "xs",
+                                "type": [
+                                    "PArrayLike"
+                                ],
+                                "info": [
+                                    "Array-like sequence of x-coordinates."
+                                ]
+                            },
+                            {
+                                "name": "ys",
+                                "type": [
+                                    "PArrayLike"
+                                ],
+                                "info": [
+                                    "Array-like sequence of y-coordinates."
+                                ]
+                            },
+                            {
+                                "name": "zs",
+                                "type": [
+                                    "PArrayLike"
+                                ],
+                                "info": [
+                                    "Array-like sequence of z-coordinates."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "PArray"
+                            ],
+                            "info": [
+                                "An array with shape (len(xs), len(ys), len(zs), 3), containing 3D coordinate points."
+                            ]
+                        },
+                        "Examples": ">>> xs = [0, 1, 2]\n>>> ys = [0, 1]\n>>> zs = [0, 1, 2, 3]\n>>> points = P3(xs, ys, zs)\n>>> points.shape\n(3, 2, 4, 3)"
+                    },
+                    "source": [
+                        "/pts.py",
+                        64
+                    ]
+                },
+                "random": {
+                    "docstring": {
+                        "Summary": [
+                            "Create an array of random numbers within a specified range.",
+                            "\n",
+                            "Generates uniformly distributed random floats between",
+                            {
+                                "code": "min"
+                            },
+                            "(inclusive) and",
+                            {
+                                "code": "max"
+                            },
+                            "(exclusive). If",
+                            {
+                                "code": "shape"
+                            },
+                            "is provided, returns an array with that shape; otherwise, returns a single float. An optional",
+                            {
+                                "code": "seed"
+                            },
+                            "ensures reproducible results."
+                        ],
+                        "Args": [
+                            {
+                                "name": "shape",
+                                "type": [
+                                    "PArrayLike",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Shape of the array to generate. If None, returns a single float."
+                                ]
+                            },
+                            {
+                                "name": "max",
+                                "type": [
+                                    "float",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Upper bound for random numbers (exclusive). Defaults to 1.0."
+                                ]
+                            },
+                            {
+                                "name": "min",
+                                "type": [
+                                    "float",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Lower bound for random numbers (inclusive). Defaults to 0.0."
+                                ]
+                            },
+                            {
+                                "name": "seed",
+                                "type": [
+                                    "int",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Seed for reproducibility. Defaults to None."
+                                ]
+                            },
+                            {
+                                "name": "rng",
+                                "type": [
+                                    "np.random.Generator",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "If provided, this generator is used for sampling. If `",
+                                    {
+                                        "code": "None"
+                                    },
+                                    {
+                                        "code": " and "
+                                    },
+                                    {
+                                        "code": "seed"
+                                    },
+                                    "` is given, a new generator is created with that seed. Otherwise the module-level generator is used."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "PArray"
+                            ],
+                            "info": [
+                                "Array of random floats within",
+                                {
+                                    "code": "[min, max)"
+                                },
+                                "or a single float if",
+                                {
+                                    "code": "shape"
+                                },
+                                "is None."
+                            ]
+                        },
+                        "Examples": ">>> random((2, 3))\narray([[0.5488135 , 0.71518937, 0.60276338],\n       [0.54488318, 0.4236548 , 0.64589411]])\n\n>>> random((2, 3), max=10, min=5)\narray([[5.53716201, 8.3015781 , 6.28250546],\n       [9.57844397, 6.65108716, 9.55465934]])\n\n>>> random((2, 3), seed=42)\narray([[0.77395605, 0.43887844, 0.85859792],\n       [0.69736803, 0.09417735, 0.97562235]])"
+                    },
+                    "source": [
+                        "/pts.py",
+                        90
+                    ]
+                },
+                "randomizer": {
+                    "docstring": {
+                        "Summary": [
+                            "Initialize a random number generator with an optional seed and return it."
+                        ],
+                        "Args": [
+                            {
+                                "name": "seed",
+                                "type": [
+                                    "int",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "An integer seed for the random number generator. Default is None."
+                                ]
+                            },
+                            {
+                                "name": "rng",
+                                "type": [
+                                    "np.random.Generator",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Return this generator if provided. If `",
+                                    {
+                                        "code": "None"
+                                    },
+                                    {
+                                        "code": " and "
+                                    },
+                                    {
+                                        "code": "seed"
+                                    },
+                                    "` is given, a new generator is created. Otherwise the module-level generator is returned."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "np.random.Generator"
+                            ],
+                            "info": [
+                                "a Generator instance."
+                            ]
+                        },
+                        "Examples": ">>> rng = randomizer(42)\n>>> rng.random()\n0.7739560485559633\n\n>>> rng = randomizer()\n>>> rng.random()\n0.4388784397520523"
+                    },
+                    "source": [
+                        "/pts.py",
+                        137
+                    ]
+                },
+                "pretty": {
+                    "docstring": {
+                        "Summary": [
+                            "Format a multi-dimensional array into a readable string.",
+                            "\n",
+                            "Converts arrays into clearly indented, human-readable strings. Useful for inspecting nested arrays. An optional header can precede the formatted array."
+                        ],
+                        "Args": [
+                            {
+                                "name": "arr",
+                                "type": [
+                                    "NumberSequenceND"
+                                ],
+                                "info": [
+                                    "Array-like data to format. header (str, optional): A title displayed above the formatted array. indent (int, optional): Spaces used for indentation. Defaults to 0."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "str"
+                            ],
+                            "info": [
+                                "A neatly formatted string representation of the array."
+                            ]
+                        },
+                        "Examples": "        >>> pretty([[1, 2], [3, 4]], header=\"2D Array\")\n        '\n\n2D Array\n[\n  [1, 2],\n  [3, 4]\n]'\n"
+                    },
+                    "source": [
+                        "/pts.py",
+                        173
+                    ]
+                },
+                "toPArray": {
+                    "docstring": {
+                        "Summary": [
+                            "A utility function to convert a list of points into a PArray. Same as",
+                            {
+                                "code": "np.asarray(pts, dtype=np.float64)"
+                            },
+                            "."
+                        ],
+                        "Args": [
+                            {
+                                "name": "pts",
+                                "type": [
+                                    "NumberSequenceND"
+                                ],
+                                "info": [
+                                    "A list of points."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "PArray"
+                            ],
+                            "info": [
+                                "A PArray containing the points."
+                            ]
+                        }
+                    },
+                    "source": [
+                        "/pts.py",
+                        211
+                    ]
+                },
+                "_coerceSize": {
+                    "docstring": {
+                        "Summary": [
+                            "Ensure a (w, h) of positive ints."
+                        ]
+                    },
+                    "source": [
+                        "/form.py",
+                        33
+                    ]
+                },
+                "frame": {
+                    "docstring": {
+                        "Summary": [
+                            "Decorate a function to draw and return a Skia image.",
+                            "\n",
+                            "This decorator provides a drawing context with size, background color, and an injected",
+                            {
+                                "code": "Form"
+                            },
+                            "instance.",
+                            "The decorated function is called as func(form, t, *args, **kwargs) , and returns a skia.Image as",
+                            "default, but your drawing function can return something else convertible to an image."
+                        ],
+                        "Args": [
+                            {
+                                "name": "bg",
+                                "type": [
+                                    "ColorLike",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Background color of the frame. Defaults to",
+                                    {
+                                        "code": "0xFFF0F3F9"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "name": "size",
+                                "type": [
+                                    "tuple[int",
+                                    "int]",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Width and height of the frame in pixels. Defaults to",
+                                    {
+                                        "code": "(512, 512)"
+                                    },
+                                    "."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "Callable"
+                            ],
+                            "info": [
+                                "A decorator that wraps a function taking a",
+                                {
+                                    "code": "Form"
+                                },
+                                "instance as its first argument. The wrapped function will return a",
+                                {
+                                    "code": "skia.Image"
+                                },
+                                "."
+                            ]
+                        },
+                        "Raises": [
+                            {
+                                "exception": "RuntimeError",
+                                "info": [
+                                    "If an exception occurs inside the decorated function."
+                                ]
+                            }
+                        ],
+                        "Examples": ">>> @frame(bg=0xFFFFFF, size=(256, 256))\n... def draw(form, r):\n...     form.circle(128, 128, r)\n>>> img = draw(r=100)  # returns a skia.Image"
+                    },
+                    "source": [
+                        "/form.py",
+                        43
+                    ]
+                },
+                "frames": {
+                    "docstring": {
+                        "Summary": [
+                            "Decorator for multi-frame usage. Injects two arguments (form: Form, t: int).",
+                            "The decorated function is called as func(form, t, *args, **kwargs) for each frame.",
+                            "Returns a (numFrames, height, width, channels) np.ndarray, with RGBA or RGB channels",
+                            "depending on removeVideoAlpha.",
+                            "\n",
+                            "The user function can rely on 't' for the current frame index (startAt + i).",
+                            "\n",
+                            "\n",
+                            "Decorate a function to render multiple frames as an array for animation or video.",
+                            "Like",
+                            {
+                                "code": "frame"
+                            },
+                            ", this decorator provides a drawing context with size, background color,",
+                            "and injects two parameters: an instance of",
+                            {
+                                "code": "Form"
+                            },
+                            "class, and the current frame index.",
+                            "\n",
+                            "The decorated function is called as func(form, t, *args, **kwargs) for each frame, and",
+                            "returns a (numFrames, height, width, channels) array, with RGBA or RGB channels based on",
+                            {
+                                "code": "keepAlpha"
+                            },
+                            "."
+                        ],
+                        "Args": [
+                            {
+                                "name": "bg",
+                                "type": [
+                                    "ColorLike",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Background color for frames. Defaults to",
+                                    {
+                                        "code": "0xFFF0F3F9"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "name": "size",
+                                "type": [
+                                    "Sequence[int]",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Width and height of each frame. Defaults to",
+                                    {
+                                        "code": "(512, 512)"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "name": "numFrames",
+                                "type": [
+                                    "int",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Total number of frames to render. Defaults to",
+                                    {
+                                        "code": "30"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "name": "clearBg",
+                                "type": [
+                                    "bool",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "If True, clears background before each frame. Defaults to",
+                                    {
+                                        "code": "True"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "name": "startAt",
+                                "type": [
+                                    "int",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "Initial frame index for rendering sequences. Defaults to",
+                                    {
+                                        "code": "0"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "name": "keepAlpha",
+                                "type": [
+                                    "bool",
+                                    "optional"
+                                ],
+                                "info": [
+                                    "If True, retains alpha channel in output frames. Defaults to",
+                                    {
+                                        "code": "False"
+                                    },
+                                    "."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "Callable"
+                            ],
+                            "info": [
+                                "Decorator wrapping a drawing function. The decorated function receives a",
+                                {
+                                    "code": "Form"
+                                },
+                                "instance and frame index as first two arguments, and returns an array of rendered frames."
+                            ]
+                        },
+                        "Raises": [
+                            {
+                                "exception": "ValueError",
+                                "info": [
+                                    "If",
+                                    {
+                                        "code": "numFrames < 1"
+                                    },
+                                    "or",
+                                    {
+                                        "code": "startAt < 0"
+                                    },
+                                    "."
+                                ]
+                            },
+                            {
+                                "exception": "RuntimeError",
+                                "info": [
+                                    "If an exception occurs within the decorated function."
+                                ]
+                            }
+                        ],
+                        "Examples": ">>> @frames(numFrames=10, size=(256, 256))\n... def animate(form, t):\n...     form.circle(128, 128, t * 5)\n>>> video = animate()  # returns array shape (10, 256, 256, 3)"
+                    },
+                    "source": [
+                        "/form.py",
+                        100
+                    ]
+                },
+                "_makePaint": {
+                    "docstring": {
+                        "Summary": [
+                            "Return a skia.Paint for 'Fill' or 'Stroke', or None if not configured."
+                        ]
+                    },
+                    "source": [
+                        "/form.py",
+                        181
+                    ]
+                },
+                "_applyPaints": {
+                    "docstring": {
+                        "Summary": [
+                            "Run *func* once per paint; restore previous self.paint afterwards."
+                        ]
+                    },
+                    "source": [
+                        "/form.py",
+                        196
+                    ]
+                },
+                "stroke_or_fill": {
+                    "docstring": {
+                        "Summary": [
+                            "Internal decorator used in ptspy's drawing functions. You typically won't need to use this.",
+                            "\n",
+                            "This decorator checks if a shader or color is set for fill and stroke, applies the appropriate paint settings,",
+                            "and then executes the decorated function."
+                        ],
+                        "Args": [
+                            {
+                                "name": "func",
+                                "type": [
+                                    "Callable"
+                                ],
+                                "info": [
+                                    "The drawing function to be decorated."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "Callable"
+                            ],
+                            "info": [
+                                "The wrapped function that sets the paint style before execution."
+                            ]
+                        },
+                        "Data": {
+                            "internal": true
+                        }
+                    },
+                    "source": [
+                        "/form.py",
+                        215
+                    ]
+                },
+                "stroke_only": {
+                    "docstring": {
+                        "Summary": [
+                            "Internal decorator used in ptspy's drawing functions. You typically won't need to use this.",
+                            "\n",
+                            "This decorator checks if a shader or color is set for stroke, applies the appropriate paint settings,",
+                            "and then executes the decorated function."
+                        ],
+                        "Args": [
+                            {
+                                "name": "func",
+                                "type": [
+                                    "Callable"
+                                ],
+                                "info": [
+                                    "The drawing function to be decorated."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "Callable"
+                            ],
+                            "info": [
+                                "The wrapped function that sets the stroke style before execution."
+                            ]
+                        },
+                        "Data": {
+                            "internal": true
+                        }
+                    },
+                    "source": [
+                        "/form.py",
+                        241
+                    ]
+                },
+                "fill_only": {
+                    "docstring": {
+                        "Summary": [
+                            "Internal decorator used in ptspy's drawing functions. You typically won't need to use this.",
+                            "\n",
+                            "This decorator checks if a shader or color is set for fill, applies the appropriate paint settings,",
+                            "and then executes the decorated function."
+                        ],
+                        "Args": [
+                            {
+                                "name": "func",
+                                "type": [
+                                    "Callable"
+                                ],
+                                "info": [
+                                    "The drawing function to be decorated."
+                                ]
+                            }
+                        ],
+                        "Returns": {
+                            "type": [
+                                "Callable"
+                            ],
+                            "info": [
+                                "The wrapped function that sets the fill style before execution."
+                            ]
+                        },
+                        "Data": {
+                            "internal": true
+                        }
+                    },
+                    "source": [
+                        "/form.py",
+                        267
+                    ]
+                }
+            }
+        }
+    }
+}

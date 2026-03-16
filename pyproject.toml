@@ -1,0 +1,72 @@
+[build-system]
+requires = ["flit_core>=3.9"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "ptspy"
+authors = [
+    {name = "William Ngan"},
+]
+description = "Pts.py is a Python library for visual composability, creative coding, and generative graphics."
+readme = "README.md"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=3.10"
+# update version in __init__.py
+dynamic = ["version"]
+keywords = ["creative-coding", "visualization", "graphics", "skia", "glfw", "pts"]
+
+dependencies = [
+  "skia-python>=138.0",
+  "numpy>=1.25.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build",
+  "twine",
+  "pyright",
+  "ruff",
+  "pytest",
+  "pytest-asyncio",
+  "pytest-benchmark",
+  "ipykernel",
+  "ipywidgets",
+  "mediapy",
+  "notebook",
+]
+opengl = [
+  "glfw>=2.0.0",
+  "PyOpenGL>=3.1.0",
+]
+
+[project.urls]
+Homepage = "https://ptspy.org"
+Documentation = "https://ptspy.org/docs"
+Source = "https://github.com/williamngan/ptspy"
+Tracker = "https://github.com/williamngan/ptspy/issues"
+Changelog = "https://github.com/williamngan/ptspy/releases"
+
+[tool.flit.sdist]
+include = ["src/"]
+exclude = ["notebooks/", "pyscript/", ".github/", ".vscode/"]
+
+[tool.flit.module]
+name = "ptspy"
+paths = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"

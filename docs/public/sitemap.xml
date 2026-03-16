@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ptspy.org/</loc>
+  </url>
+  <url>
+    <loc>https://ptspy.org/start</loc>
+  </url>
+  <url>
+    <loc>https://ptspy.org/docs</loc>
+  </url>
+  <url>
+    <loc>https://ptspy.org/docs.md</loc>
+  </url>
+  <url>
+    <loc>https://ptspy.org/llms.txt</loc>
+  </url>
+  <url>
+    <loc>https://ptspy.org/llms-full.txt</loc>
+  </url>
+</urlset>

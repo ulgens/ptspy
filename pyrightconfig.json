@@ -1,0 +1,18 @@
+{
+  "include": ["src", "notebooks"],
+  "exclude": ["**/node_modules", "**/__pycache__", "docs/parse.py"],
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "pythonVersion": "3.10",
+  "pythonPlatform": "All",
+  "extraPaths": ["src"],
+  "executionEnvironments": [
+    {
+      "root": "src"
+    },
+    {
+      "root": "notebooks",
+      "extraPaths": ["src"]
+    }
+  ]
+}
