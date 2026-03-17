@@ -1,4 +1,5 @@
 """Numpy-like wrapper that supports backend swapping and overrides."""
+
 import importlib
 import warnings
 from typing import Callable, Any
@@ -44,7 +45,7 @@ def isarray(x):
     """Check if x is an ndarray from any supported backend."""
     if isinstance(x, _known_array_types):
         return True
-    return hasattr(x, 'ndim') and hasattr(x, 'dtype') and hasattr(x, 'shape') and not isinstance(x, (list, tuple))
+    return hasattr(x, "ndim") and hasattr(x, "dtype") and hasattr(x, "shape") and not isinstance(x, (list, tuple))
 
 
 def reset(library_name: str):
@@ -71,7 +72,7 @@ def reset(library_name: str):
     """
     global _np_module, _overrides
     mod = importlib.import_module(library_name)
-    if not hasattr(mod, 'ndarray') or not hasattr(mod, 'asarray'):
+    if not hasattr(mod, "ndarray") or not hasattr(mod, "asarray"):
         raise ValueError(f"'{library_name}' is not a numpy-compatible backend")
     if _np_module is not mod and _np_module is not _cpu_numpy:
         warnings.warn(
@@ -146,6 +147,4 @@ def __getattr__(name: str):
     try:
         return getattr(_np_module, name)
     except AttributeError as exc:
-        raise AttributeError(
-            f"Attribute '{name}' not found in overrides or backend '{_np_module.__name__}'"
-        ) from exc
+        raise AttributeError(f"Attribute '{name}' not found in overrides or backend '{_np_module.__name__}'") from exc

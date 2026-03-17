@@ -11,6 +11,7 @@ Run with:
 
 CuPy tests are automatically skipped if CuPy is unavailable or CUDA is unusable.
 """
+
 import importlib.util
 from pathlib import Path
 
@@ -20,13 +21,14 @@ from ptspy.core.form import Form
 
 # Import np_wrapper directly to avoid pulling the full ptspy package during backend-only benchmarks.
 _spec = importlib.util.spec_from_file_location(
-    'np_wrapper', str(Path(__file__).resolve().parents[2] / "src" / "ptspy" / "np_wrapper.py")
+    "np_wrapper", str(Path(__file__).resolve().parents[2] / "src" / "ptspy" / "np_wrapper.py")
 )
 npw = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(npw)
 
 try:
     import cupy  # type: ignore[import-untyped]
+
     HAS_CUPY = True
     try:
         HAS_CUDA = bool(cupy.cuda.is_available())
@@ -44,6 +46,7 @@ requires_cupy_cuda = pytest.mark.skipif(not HAS_CUDA, reason=CUDA_SKIP_REASON)
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _setup_backend(backend_name):
     """Switch np_wrapper to the given backend and return the module."""
     npw.reset(backend_name)
@@ -51,7 +54,7 @@ def _setup_backend(backend_name):
 
 
 def _teardown_backend():
-    npw.reset('numpy')
+    npw.reset("numpy")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -61,7 +64,7 @@ def _warmup_cupy_once():
         yield
         return
 
-    _setup_backend('cupy')
+    _setup_backend("cupy")
     arr = cupy.arange(1, dtype=cupy.float32)
     cupy.cuda.Stream.null.synchronize()
     del arr
@@ -74,6 +77,7 @@ def _warmup_cupy_once():
 # 1. Array creation — linspace / arange
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("n", [1_000, 100_000, 1_000_000], ids=["1K", "100K", "1M"])
 class TestLinspace:
     """Benchmark linspace under both backends."""
@@ -84,25 +88,27 @@ class TestLinspace:
         _teardown_backend()
 
     def test_numpy_linspace(self, benchmark, n):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"linspace-{n}"
         benchmark(npw.linspace, 0.0, 1.0, n)
 
     @requires_cupy_cuda
     def test_cupy_linspace(self, benchmark, n):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"linspace-{n}"
 
         def run():
             result = npw.linspace(0.0, 1.0, n)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 2. Element-wise math (sin, cos, exp)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("n", [10_000, 100_000, 1_000_000], ids=["10K", "100K", "1M"])
 class TestElementwiseMath:
@@ -114,17 +120,18 @@ class TestElementwiseMath:
         _teardown_backend()
 
     def test_numpy_elementwise_math(self, benchmark, n):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"sin_cos_exp-{n}"
         data = npw.linspace(0.0, 6.28, n)
 
         def run():
             return npw.sin(data) * npw.cos(data) + npw.exp(-data)
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_elementwise_math(self, benchmark, n):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"sin_cos_exp-{n}"
         data = npw.linspace(0.0, 6.28, n)
 
@@ -132,12 +139,14 @@ class TestElementwiseMath:
             result = npw.sin(data) * npw.cos(data) + npw.exp(-data)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 3. Matrix operations — meshgrid + reshape (like P2/gridPoints)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("n", [50, 200, 500], ids=["50x50", "200x200", "500x500"])
 class TestMeshgrid:
@@ -149,7 +158,7 @@ class TestMeshgrid:
         _teardown_backend()
 
     def test_numpy_meshgrid(self, benchmark, n):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"meshgrid-{n}x{n}"
         xs = npw.linspace(0, 1, n)
         ys = npw.linspace(0, 1, n)
@@ -157,11 +166,12 @@ class TestMeshgrid:
         def run():
             gx, gy = npw.meshgrid(xs, ys)
             return npw.stack([gx.ravel(), gy.ravel()], axis=1)
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_meshgrid(self, benchmark, n):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"meshgrid-{n}x{n}"
         xs = npw.linspace(0, 1, n)
         ys = npw.linspace(0, 1, n)
@@ -171,6 +181,7 @@ class TestMeshgrid:
             result = npw.stack([gx.ravel(), gy.ravel()], axis=1)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
@@ -178,8 +189,8 @@ class TestMeshgrid:
 # 4. Bitwise operations (like image() pixel packing)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("size", [(256, 256), (1024, 1024), (2048, 2048)],
-                         ids=["256x256", "1024x1024", "2048x2048"])
+
+@pytest.mark.parametrize("size", [(256, 256), (1024, 1024), (2048, 2048)], ids=["256x256", "1024x1024", "2048x2048"])
 class TestBitwisePixelPacking:
     """Benchmark ARGB→RGBA bitwise unpacking (used in Form.image())."""
 
@@ -189,7 +200,7 @@ class TestBitwisePixelPacking:
         _teardown_backend()
 
     def test_numpy_bitwise_pixel_packing(self, benchmark, size):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         h, w = size
         benchmark.group = f"pixel_pack-{h}x{w}"
         arr = npw.random.default_rng(42).integers(0, 0xFFFFFFFF, (h, w), dtype=npw.uint32)
@@ -201,11 +212,12 @@ class TestBitwisePixelPacking:
             rgba[..., 2] = arr & 0xFF
             rgba[..., 3] = 255
             return rgba
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_bitwise_pixel_packing(self, benchmark, size):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         h, w = size
         benchmark.group = f"pixel_pack-{h}x{w}"
         arr = npw.random.default_rng(42).integers(0, 0xFFFFFFFF, (h, w), dtype=npw.uint32)
@@ -218,12 +230,14 @@ class TestBitwisePixelPacking:
             rgba[..., 3] = 255
             cupy.cuda.Stream.null.synchronize()
             return rgba
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 5. Skia image upload boundary (Form.image)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("size", [(128, 128), (512, 512)], ids=["128x128", "512x512"])
 class TestFormImage:
@@ -245,7 +259,7 @@ class TestFormImage:
         return table, rect
 
     def test_numpy_form_image(self, benchmark, size):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"form_image_cpu_table-{size[0]}x{size[1]}"
         table, rect = self._make_inputs(size)
         form = Form(width=size[1], height=size[0])
@@ -253,11 +267,12 @@ class TestFormImage:
         def run():
             form.image(table, rect, filterMode="nearest")
             return form
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_form_image(self, benchmark, size):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"form_image_cpu_table-{size[0]}x{size[1]}"
         table, rect = self._make_inputs(size)
         form = Form(width=size[1], height=size[0])
@@ -265,12 +280,14 @@ class TestFormImage:
         def run():
             form.image(table, rect, filterMode="nearest")
             return form
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 6. Linear algebra — matrix multiply (like transform2D)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("n", [1_000, 10_000, 100_000], ids=["1K", "10K", "100K"])
 class TestMatmul:
@@ -282,18 +299,19 @@ class TestMatmul:
         _teardown_backend()
 
     def test_numpy_matmul(self, benchmark, n):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"matmul-{n}"
         pts = npw.random.default_rng(42).standard_normal((n, 3)).astype(npw.float32)
         matrix = npw.array([[1, 0, 10], [0, 1, 20], [0, 0, 1]], dtype=npw.float32)
 
         def run():
             return pts @ matrix.T
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_matmul(self, benchmark, n):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"matmul-{n}"
         pts = npw.random.default_rng(42).standard_normal((n, 3)).astype(npw.float32)
         matrix = npw.array([[1, 0, 10], [0, 1, 20], [0, 0, 1]], dtype=npw.float32)
@@ -302,12 +320,14 @@ class TestMatmul:
             result = pts @ matrix.T
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 7. asnumpy transfer cost (GPU→CPU)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("n", [1_000, 100_000, 1_000_000], ids=["1K", "100K", "1M"])
 class TestAsnumpyTransfer:
@@ -320,7 +340,7 @@ class TestAsnumpyTransfer:
 
     def test_numpy_noop(self, benchmark, n):
         """Baseline: asnumpy on a numpy array (should be near-zero cost)."""
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"asnumpy-{n}"
         data = npw.linspace(0, 1, n)
         benchmark(npw.asnumpy, data)
@@ -328,7 +348,7 @@ class TestAsnumpyTransfer:
     @requires_cupy_cuda
     def test_cupy_transfer(self, benchmark, n):
         """GPU→CPU transfer cost for cupy arrays."""
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"asnumpy-{n}"
         data = npw.linspace(0, 1, n)
         cupy.cuda.Stream.null.synchronize()
@@ -339,8 +359,8 @@ class TestAsnumpyTransfer:
 # 8. Einsum (used in spline sampling)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("segments,samples", [(10, 20), (100, 50), (500, 100)],
-                         ids=["10x20", "100x50", "500x100"])
+
+@pytest.mark.parametrize("segments,samples", [(10, 20), (100, 50), (500, 100)], ids=["10x20", "100x50", "500x100"])
 class TestEinsum:
     """Benchmark einsum (core of sampleCardinal/sampleBspline)."""
 
@@ -350,26 +370,28 @@ class TestEinsum:
         _teardown_backend()
 
     def test_numpy_einsum(self, benchmark, segments, samples):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"einsum-{segments}x{samples}"
         TM = npw.random.default_rng(42).standard_normal((samples, 4)).astype(npw.float32)
         G = npw.random.default_rng(42).standard_normal((segments, 4, 2)).astype(npw.float32)
 
         def run():
-            return npw.einsum('si,nid->nsd', TM, G)
+            return npw.einsum("si,nid->nsd", TM, G)
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_einsum(self, benchmark, segments, samples):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"einsum-{segments}x{samples}"
         TM = npw.random.default_rng(42).standard_normal((samples, 4)).astype(npw.float32)
         G = npw.random.default_rng(42).standard_normal((segments, 4, 2)).astype(npw.float32)
 
         def run():
-            result = npw.einsum('si,nid->nsd', TM, G)
+            result = npw.einsum("si,nid->nsd", TM, G)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
@@ -377,8 +399,8 @@ class TestEinsum:
 # 9. Color conversion (like arrayToImage)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("size", [(100, 100), (500, 500), (1000, 1000)],
-                         ids=["100x100", "500x500", "1000x1000"])
+
+@pytest.mark.parametrize("size", [(100, 100), (500, 500), (1000, 1000)], ids=["100x100", "500x500", "1000x1000"])
 class TestColorConversion:
     """Benchmark float→uint8 color conversion (like arrayToImage)."""
 
@@ -388,7 +410,7 @@ class TestColorConversion:
         _teardown_backend()
 
     def test_numpy_color_conversion(self, benchmark, size):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         h, w = size
         benchmark.group = f"color_conv-{h}x{w}"
         data = npw.random.default_rng(42).standard_normal((h, w, 3)).astype(npw.float32)
@@ -400,11 +422,12 @@ class TestColorConversion:
             rgb = npw.rint(pixel * 255).astype(npw.uint32)
             r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
             return (r << 16) | (g << 8) | b
+
         benchmark(run)
 
     @requires_cupy_cuda
     def test_cupy_color_conversion(self, benchmark, size):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         h, w = size
         benchmark.group = f"color_conv-{h}x{w}"
         data = npw.random.default_rng(42).standard_normal((h, w, 3)).astype(npw.float32)
@@ -418,12 +441,14 @@ class TestColorConversion:
             result = (r << 16) | (g << 8) | b
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 10. HCL→LAB→RGB pipeline (colorCube core computation)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("steps", [10, 24, 36], ids=["10", "24", "36"])
 class TestColorCubePipeline:
@@ -444,15 +469,18 @@ class TestColorCubePipeline:
         h = npw.linspace(0, TWO_PI, steps, endpoint=False)
         c = npw.linspace(0, 100, steps)
         l = npw.linspace(0, 100, steps)
-        H, C, L = npw.meshgrid(h, c, l, indexing='ij')
+        H, C, L = npw.meshgrid(h, c, l, indexing="ij")
         hcl = npw.stack([H, C, L], axis=-1)
 
         # HCL → LAB (polar to cartesian)
-        lab = npw.stack([
-            hcl[..., 2],
-            hcl[..., 1] * npw.cos(hcl[..., 0]),
-            hcl[..., 1] * npw.sin(hcl[..., 0]),
-        ], axis=-1)
+        lab = npw.stack(
+            [
+                hcl[..., 2],
+                hcl[..., 1] * npw.cos(hcl[..., 0]),
+                hcl[..., 1] * npw.sin(hcl[..., 0]),
+            ],
+            axis=-1,
+        )
 
         # LAB → XYZ → linear RGB (simplified)
         fy = (lab[..., 0] + 16) / 116
@@ -471,25 +499,27 @@ class TestColorCubePipeline:
         return npw.rint(rgb * 255).astype(npw.uint8)
 
     def test_numpy_color_cube_pipeline(self, benchmark, steps):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"color_cube-{steps}"
         benchmark(self._run_pipeline, steps)
 
     @requires_cupy_cuda
     def test_cupy_color_cube_pipeline(self, benchmark, steps):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"color_cube-{steps}"
 
         def run():
             result = self._run_pipeline(steps)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
 # ---------------------------------------------------------------------------
 # 11. Gamut mapping — soft shoulder compression
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("n", [10_000, 100_000, 1_000_000], ids=["10K", "100K", "1M"])
 class TestGamutMapping:
@@ -521,19 +551,20 @@ class TestGamutMapping:
         return npw.clip(result, 0, 1)
 
     def test_numpy_gamut_mapping(self, benchmark, n):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"gamut_map-{n}"
         benchmark(self._run_gamut, n)
 
     @requires_cupy_cuda
     def test_cupy_gamut_mapping(self, benchmark, n):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"gamut_map-{n}"
 
         def run():
             result = self._run_gamut(n)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)
 
 
@@ -541,8 +572,8 @@ class TestGamutMapping:
 # 12. Spline basis — Bernstein + einsum (sampleBezier core)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("segments,samples", [(50, 50), (200, 100), (500, 200)],
-                         ids=["50x50", "200x100", "500x200"])
+
+@pytest.mark.parametrize("segments,samples", [(50, 50), (200, 100), (500, 200)], ids=["50x50", "200x100", "500x200"])
 class TestSplineSampling:
     """Benchmark Bernstein basis evaluation + einsum (sampleBezier core).
 
@@ -562,20 +593,21 @@ class TestSplineSampling:
 
         rng = npw.random.default_rng(42)
         G = rng.standard_normal((segments, 4, 2)).astype(npw.float32)
-        return npw.einsum('si,nid->nsd', B, G).reshape(-1, 2)
+        return npw.einsum("si,nid->nsd", B, G).reshape(-1, 2)
 
     def test_numpy_spline_sampling(self, benchmark, segments, samples):
-        _setup_backend('numpy')
+        _setup_backend("numpy")
         benchmark.group = f"spline-{segments}x{samples}"
         benchmark(self._run_spline, segments, samples)
 
     @requires_cupy_cuda
     def test_cupy_spline_sampling(self, benchmark, segments, samples):
-        _setup_backend('cupy')
+        _setup_backend("cupy")
         benchmark.group = f"spline-{segments}x{samples}"
 
         def run():
             result = self._run_spline(segments, samples)
             cupy.cuda.Stream.null.synchronize()
             return result
+
         benchmark(run)

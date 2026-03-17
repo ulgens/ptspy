@@ -49,6 +49,7 @@ def test_randomizer_seed_and_passthrough():
 
 def test_partial_placeholder_extra_args_appended():
     """Extra positional args beyond placeholders are appended."""
+
     @partial(optional=False, placeholder=TBD)
     def fn(a, b, c):
         return (a, b, c)
@@ -59,6 +60,7 @@ def test_partial_placeholder_extra_args_appended():
 
 def test_partial_placeholder_fewer_args_than_placeholders():
     """When fewer args than placeholders are provided, remaining stay as TBD (returns curry)."""
+
     @partial(optional=False, placeholder=TBD)
     def fn(a, b, c):
         return (a, b, c)
@@ -70,6 +72,7 @@ def test_partial_placeholder_fewer_args_than_placeholders():
 
 def test_partial_keyword_placeholder_replacement():
     """Keyword placeholders are replaced by subsequent calls."""
+
     @partial(optional=False, placeholder=TBD)
     def fn(a, b, *, c):
         return (a, b, c)
@@ -81,6 +84,7 @@ def test_partial_keyword_placeholder_replacement():
 
 def test_partial_keyword_duplicate_raises_with_function_name():
     """Duplicate keyword args include function name in error message."""
+
     @partial(optional=False)
     def myFunc(a, b):
         return a + b
@@ -91,6 +95,7 @@ def test_partial_keyword_duplicate_raises_with_function_name():
 
 def test_partial_keyword_only_params():
     """Keyword-only parameters work correctly with partial."""
+
     @partial(optional=False)
     def fn(*, x, y, z):
         return x + y + z
@@ -101,6 +106,7 @@ def test_partial_keyword_only_params():
 
 def test_partial_with_varargs():
     """Functions with *args work with partial (optional mode)."""
+
     @partial(optional=True)
     def fn(a, *args):
         return (a, args)
@@ -111,6 +117,7 @@ def test_partial_with_varargs():
 
 def test_partial_with_kwargs():
     """Functions with **kwargs work with partial (optional mode)."""
+
     @partial(optional=True)
     def fn(a, **kwargs):
         return (a, kwargs)

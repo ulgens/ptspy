@@ -35,6 +35,7 @@ DEGREE_TO_RADIAN = ONE_DEGREE
 # Gaussian constant for normalization
 GAUSSIAN = 1.0 / sqrt(2 * PI)
 
+
 def toRadian(degrees: PArrayOrScalar) -> PArrayOrScalar:
     """
     Convert degrees to radians.
@@ -76,7 +77,7 @@ def toDegree(radians: PArrayOrScalar) -> PArrayOrScalar:
 
 
 @partial(optional=True, placeholder=TBD)
-def regularPolygon(center:NumberSequence1D, sides:int, radius:int=1, closed:bool=False) -> PArray:
+def regularPolygon(center: NumberSequence1D, sides: int, radius: int = 1, closed: bool = False) -> PArray:
     """
     Generate the vertices of a regular polygon.
 
@@ -103,7 +104,7 @@ def regularPolygon(center:NumberSequence1D, sides:int, radius:int=1, closed:bool
     """
     if sides < 3:
         raise ValueError("sides must be at least 3")
-    z = radius * np.exp(1j * np.linspace(0, 2*np.pi, sides, False))
+    z = radius * np.exp(1j * np.linspace(0, 2 * np.pi, sides, False))
     vertices = np.column_stack([z.real, z.imag]) + center
 
     if closed:
@@ -292,6 +293,7 @@ def transform2D(pts: NumberSequenceND, matrix: NumberSequenceND) -> PArray:
 
 
 # --- Matrix2D helpers (private) ---
+
 
 def _translateM(offset: PArray) -> PArray:
     """Build a 3x3 translation matrix."""
@@ -583,7 +585,7 @@ class Rectangle:
             # Array: proportional splits
             cumulative = np.cumsum(ratios)
             # Keep ratios that start before 1.0 (truncate overflow)
-            keep = int(np.searchsorted(cumulative, 1.0, side='left')) + 1
+            keep = int(np.searchsorted(cumulative, 1.0, side="left")) + 1
             ratios = ratios[:keep]
             cumulative = np.minimum(np.cumsum(ratios), 1.0)
             edges = np.concatenate([[0.0], cumulative.astype(np.float32)]) * span + lo
@@ -808,25 +810,31 @@ def sampleCardinal(
 
     if np.isscalar(tension):
         s = 1.0 - float(tension)
-        M = np.array([
-            [-s,     2.0 - s, s - 2.0,     s],
-            [2.0*s,  s - 3.0, 3.0 - 2.0*s, -s],
-            [-s,     0.0,     s,            0.0],
-            [0.0,    1.0,     0.0,          0.0],
-        ], dtype=np.float32)
-        TM = T @ M                                       # (numSamples, 4)
-        samples = np.einsum('si,nid->nsd', TM, G)        # (numSegments, numSamples, d)
+        M = np.array(
+            [
+                [-s, 2.0 - s, s - 2.0, s],
+                [2.0 * s, s - 3.0, 3.0 - 2.0 * s, -s],
+                [-s, 0.0, s, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
+        TM = T @ M  # (numSamples, 4)
+        samples = np.einsum("si,nid->nsd", TM, G)  # (numSegments, numSamples, d)
     else:
         s = 1.0 - np.asarray(tension, dtype=np.float32)[i0]  # (numSegments,)
         z = np.zeros_like(s)
         o = np.ones_like(s)
-        M = np.array([
-            [-s,     2.0 - s, s - 2.0,     s],
-            [2.0*s,  s - 3.0, 3.0 - 2.0*s, -s],
-            [-s,     z,       s,            z],
-            [z,      o,       z,            z],
-        ], dtype=np.float32).transpose(2, 0, 1)           # (numSegments, 4, 4)
-        samples = np.einsum('si,nij,njd->nsd', T, M, G)   # (numSegments, numSamples, d)
+        M = np.array(
+            [
+                [-s, 2.0 - s, s - 2.0, s],
+                [2.0 * s, s - 3.0, 3.0 - 2.0 * s, -s],
+                [-s, z, s, z],
+                [z, o, z, z],
+            ],
+            dtype=np.float32,
+        ).transpose(2, 0, 1)  # (numSegments, 4, 4)
+        samples = np.einsum("si,nij,njd->nsd", T, M, G)  # (numSegments, numSamples, d)
 
     samples = samples.reshape(-1, pts.shape[1])
     endpoint = pts[0:1] if closed else pts[-1:]
@@ -910,12 +918,18 @@ def sampleBspline(
     numSegments = n if closed else n - 3
 
     # Uniform cubic B-spline basis matrix
-    M = np.array([
-        [-1,  3, -3,  1],
-        [ 3, -6,  3,  0],
-        [-3,  0,  3,  0],
-        [ 1,  4,  1,  0],
-    ], dtype=np.float32) / 6.0
+    M = (
+        np.array(
+            [
+                [-1, 3, -3, 1],
+                [3, -6, 3, 0],
+                [-3, 0, 3, 0],
+                [1, 4, 1, 0],
+            ],
+            dtype=np.float32,
+        )
+        / 6.0
+    )
 
     t = np.linspace(0, 1, numSamples, endpoint=False, dtype=np.float32)
     T = np.column_stack([t**3, t**2, t, np.ones_like(t)])
@@ -923,10 +937,11 @@ def sampleBspline(
 
     # Index arrays for 4 control points per segment
     seg = np.arange(numSegments)
-    G = np.stack([pts[seg % n], pts[(seg + 1) % n],
-                  pts[(seg + 2) % n], pts[(seg + 3) % n]], axis=1)  # (numSegments, 4, d)
+    G = np.stack(
+        [pts[seg % n], pts[(seg + 1) % n], pts[(seg + 2) % n], pts[(seg + 3) % n]], axis=1
+    )  # (numSegments, 4, d)
 
-    samples = np.einsum('si,nid->nsd', TM, G)  # (numSegments, numSamples, d)
+    samples = np.einsum("si,nid->nsd", TM, G)  # (numSegments, numSamples, d)
     samples = samples.reshape(-1, pts.shape[1])
 
     # Append final endpoint
@@ -978,7 +993,7 @@ def sampleBezier(
     # Geometry: (numSegments, 4, d)
     G = np.stack([P0, segments[:, 0], segments[:, 1], segments[:, 2]], axis=1)
 
-    samples = np.einsum('si,nid->nsd', B, G)  # (numSegments, numSamples, d)
+    samples = np.einsum("si,nid->nsd", B, G)  # (numSegments, numSamples, d)
     samples = samples.reshape(-1, d)
 
     return np.concatenate([samples, segments[-1:, 2]], axis=0)

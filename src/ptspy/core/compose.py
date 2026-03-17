@@ -1,13 +1,10 @@
 """Composition and array-construction helpers."""
+
 from .elements import randomizer, toPArray, partial, TBD
 from .process import shapingFunction
-from ptspy.typing import (
-    PArrayOrScalar, PArrayLike, PArray,
-    IntArrayOrScalar, NumberSequenceND, ShapingFunction
-)
+from ptspy.typing import PArrayOrScalar, PArrayLike, PArray, IntArrayOrScalar, NumberSequenceND, ShapingFunction
 from .. import np_wrapper as np
 from typing import cast, Union, Optional
-
 
 
 @partial(optional=True, placeholder=TBD)
@@ -47,7 +44,6 @@ def populate(shape: IntArrayOrScalar, start=0, increment=1) -> PArray:
     # build by index then scale+shift
     seq = start + increment * np.arange(numElements, dtype=np.float32)
     return seq.reshape(shape)
-
 
 
 @partial(optional=True, placeholder=TBD)
@@ -233,7 +229,9 @@ def random(
 
 
 @partial(optional=True, placeholder=TBD)
-def irregular(maxValue: float, steps: int, rng: np.random.Generator = None, shaping: Union[str, ShapingFunction] = "linear") -> PArray:
+def irregular(
+    maxValue: float, steps: int, rng: np.random.Generator = None, shaping: Union[str, ShapingFunction] = "linear"
+) -> PArray:
     """
     Generate irregularly spaced numbers between 0 and a maximum value.
 
@@ -263,8 +261,8 @@ def irregular(maxValue: float, steps: int, rng: np.random.Generator = None, shap
     randGen = rng or np.random.default_rng()
 
     scale = np.float32(maxValue) / steps
-    bins = np.arange(steps, dtype=np.float32)           # 0..steps-1
-    jitter = randGen.random(steps)                     # 0-1
+    bins = np.arange(steps, dtype=np.float32)  # 0..steps-1
+    jitter = randGen.random(steps)  # 0-1
 
     shaper = shapingFunction(shaping) if isinstance(shaping, str) else shaping
     u = np.asarray(shaper(jitter, 0.0, 1.0), dtype=np.float32)

@@ -1,5 +1,6 @@
 # ruff: noqa: E731
 """Pipeline composition and array processing utilities."""
+
 from __future__ import annotations
 import functools
 from dataclasses import dataclass
@@ -8,7 +9,6 @@ from inspect import iscoroutinefunction, isawaitable, iscoroutine
 from typing import (
     Any,
     AsyncGenerator,
-    Awaitable,
     Callable,
     Generator,
     ParamSpec,
@@ -97,13 +97,17 @@ def _merge_option(name: str, left: object, right: object) -> object:
     return left
 
 
-def _normalize_trace(trace: bool | Callable[[str, Any], Any]) -> tuple[object | Callable[[str, Any], Any] | None, Callable[[str, Any], Any] | None]:
+def _normalize_trace(
+    trace: bool | Callable[[str, Any], Any],
+) -> tuple[object | Callable[[str, Any], Any] | None, Callable[[str, Any], Any] | None]:
     if trace is False or trace is None:
         return None, None
     if trace is True:
+
         def _tap(name, value):
             print(f"{name}: {value!r}")
             return value
+
         return _TRACE_PRINT, _tap
     if callable(trace):
         return trace, trace
@@ -441,7 +445,6 @@ class StageFunction:
         self.fn = fn
         self._spec = _spec_from_callable(fn)
 
-
     def __rshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
         """
         Implements the right shift (>>) operator to compose two stage functions into a single pipeline.
@@ -460,7 +463,6 @@ class StageFunction:
                 trace=self._trace_arg_from_spec(merged.trace),
             )
         )
-
 
     def __rrshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
         """
@@ -481,7 +483,6 @@ class StageFunction:
             )
         )
 
-
     def __lshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
         """
         Implements the left shift (<<) operator to compose two stage functions into a new StageFunction with reversed pipeline order.
@@ -500,7 +501,6 @@ class StageFunction:
                 trace=self._trace_arg_from_spec(merged.trace),
             )
         )
-
 
     def __rlshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
         """
@@ -521,13 +521,11 @@ class StageFunction:
             )
         )
 
-
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self.fn(*args, **kwargs)
 
     def __repr__(self) -> str:
         return f"<Stage {self.fn}>"
-
 
 
 # Short alias
@@ -552,10 +550,14 @@ def _getShapingTable() -> dict[str, ShapingFunction]:
             return lambda t, a, b: a + (b - a) * t**p
         if mode == "out":
             return lambda t, a, b: a + (b - a) * (1 - (1 - t) ** p)
-        return lambda t, a, b: a + (b - a) * np.where(
-            t < 0.5,
-            (2 * t) ** p / 2,
-            1 - (2 * (1 - t)) ** p / 2,
+        return lambda t, a, b: (
+            a
+            + (b - a)
+            * np.where(
+                t < 0.5,
+                (2 * t) ** p / 2,
+                1 - (2 * (1 - t)) ** p / 2,
+            )
         )
 
     linear = lambda t, a, b: a + (b - a) * t
@@ -584,9 +586,7 @@ def _getShapingTable() -> dict[str, ShapingFunction]:
         outer = 1 - (2 * (1 - t)) ** (1 - p) / 2
         return a + c * np.where(t < 0.5, inner, outer)
 
-    return {
-        name: obj for name, obj in locals().items() if callable(obj) and name not in {"_power"}
-    }
+    return {name: obj for name, obj in locals().items() if callable(obj) and name not in {"_power"}}
 
 
 def shapingFunction(id: ShapingMethod, params: Optional[Number | Sequence[Number]] = None) -> ShapingFunction:
@@ -788,7 +788,7 @@ def changeDims(
         # Find the longest consecutive sequence from the start
         candidates = []
         for i in range(len(singleton_indices)):
-            if i == 0 or singleton_indices[i] == singleton_indices[i-1] + 1:
+            if i == 0 or singleton_indices[i] == singleton_indices[i - 1] + 1:
                 candidates.append(singleton_indices[i])
             else:
                 break
@@ -801,7 +801,7 @@ def changeDims(
         # Find the longest consecutive sequence from the end
         candidates = []
         for i in range(len(singleton_indices) - 1, -1, -1):
-            if i == len(singleton_indices) - 1 or singleton_indices[i] == singleton_indices[i+1] - 1:
+            if i == len(singleton_indices) - 1 or singleton_indices[i] == singleton_indices[i + 1] - 1:
                 candidates.append(singleton_indices[i])
             else:
                 break
@@ -1292,7 +1292,7 @@ def pointsToRegions(
     return np.stack((start, end), axis=1)
 
 
-def attachPositionIndex(arr: PArray, offsets:Optional[NumberSequenceND]=None) -> PArray:
+def attachPositionIndex(arr: PArray, offsets: Optional[NumberSequenceND] = None) -> PArray:
     """
     Get positional indices attached to each coordinate in the array.
 
@@ -1332,7 +1332,7 @@ def attachPositionIndex(arr: PArray, offsets:Optional[NumberSequenceND]=None) ->
         raise ValueError(f"offsets length ({len(offsets)}) must match array dimensions ({ndim})")
 
     # Create coordinate grids for each dimension
-    coords = np.meshgrid(*[np.arange(s) for s in shape], indexing='ij')
+    coords = np.meshgrid(*[np.arange(s) for s in shape], indexing="ij")
 
     # Create result array with shape (*original_shape, ndim + 1)
     resultShape = shape + (ndim + 1,)

@@ -1,4 +1,5 @@
 """Visual regression testing fixtures for ptspy."""
+
 from __future__ import annotations
 
 import pytest
@@ -47,17 +48,22 @@ def _saveMp4(frames: np.ndarray, path: Path, fps: int = 10) -> None:
 
         # Use ffmpeg to create MP4 (try libopenh264, fallback to any h264)
         cmd = [
-            "ffmpeg", "-y", "-framerate", str(fps),
-            "-i", f"{tmpdir}/frame_%04d.png",
-            "-c:v", "libopenh264", "-pix_fmt", "yuv420p",
-            str(path)
+            "ffmpeg",
+            "-y",
+            "-framerate",
+            str(fps),
+            "-i",
+            f"{tmpdir}/frame_%04d.png",
+            "-c:v",
+            "libopenh264",
+            "-pix_fmt",
+            "yuv420p",
+            str(path),
         ]
         subprocess.run(cmd, capture_output=True, check=True)
 
 
-def _compareArrays(
-    actual: np.ndarray, expected: np.ndarray, tolerance: int = 0
-) -> tuple[bool, Optional[np.ndarray]]:
+def _compareArrays(actual: np.ndarray, expected: np.ndarray, tolerance: int = 0) -> tuple[bool, Optional[np.ndarray]]:
     """Compare two arrays with optional tolerance. Returns (match, diff)."""
     if actual.shape != expected.shape:
         return False, None
@@ -116,6 +122,7 @@ def pytest_configure(config):
     """Clear groundtruth directory when rebuilding."""
     if config.getoption("--rebuild-groundtruth", default=False):
         import shutil
+
         if GROUNDTRUTH_DIR.exists():
             shutil.rmtree(GROUNDTRUTH_DIR)
         GROUNDTRUTH_DIR.mkdir(parents=True, exist_ok=True)
@@ -134,9 +141,8 @@ def visualTest(request):
 
             visualTest(draw, "circle_red")
     """
-    updateGroundtruth = (
-        request.config.getoption("--update-groundtruth", default=False) or
-        request.config.getoption("--rebuild-groundtruth", default=False)
+    updateGroundtruth = request.config.getoption("--update-groundtruth", default=False) or request.config.getoption(
+        "--rebuild-groundtruth", default=False
     )
     tolerance = request.config.getoption("--visual-tolerance", default=0)
 
@@ -172,9 +178,7 @@ def visualTest(request):
 
         # Load and compare
         if not gtPath.exists():
-            pytest.fail(
-                f"Groundtruth not found: {gtPath}. Run with --update-groundtruth to create."
-            )
+            pytest.fail(f"Groundtruth not found: {gtPath}. Run with --update-groundtruth to create.")
 
         if isSequence:
             expected = np.load(gtPath)["frames"]
@@ -186,9 +190,7 @@ def visualTest(request):
                 _savePng(expected[failFrame], failDir / f"{name}_frame{failFrame}_expected.png")
                 if diff is not None:
                     _savePng(diff, failDir / f"{name}_frame{failFrame}_diff.png")
-                pytest.fail(
-                    f"Visual mismatch for sequence '{name}' at frame {failFrame}. See {failDir}"
-                )
+                pytest.fail(f"Visual mismatch for sequence '{name}' at frame {failFrame}. See {failDir}")
         else:
             expected = _loadPng(gtPath)
             match, diff = _compareArrays(actual, expected, tolerance=tol)

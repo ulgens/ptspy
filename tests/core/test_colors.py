@@ -192,11 +192,13 @@ def test_gamut_map_soft_threshold_and_strength():
 
 def test_gamut_map_soft_edge_cases():
     """Black, white, and grayscale should be handled correctly."""
-    edges = np.array([
-        [0.0, 0.0, 0.0],  # Black
-        [1.0, 1.0, 1.0],  # White
-        [0.5, 0.5, 0.5],  # Gray
-    ])
+    edges = np.array(
+        [
+            [0.0, 0.0, 0.0],  # Black
+            [1.0, 1.0, 1.0],  # White
+            [0.5, 0.5, 0.5],  # Gray
+        ]
+    )
     mapped = _gamutMapSoft(edges)
 
     # Black should remain black

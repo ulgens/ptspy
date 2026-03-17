@@ -1,4 +1,5 @@
 """Type aliases shared across ptspy."""
+
 from __future__ import annotations
 
 from typing import Callable, Literal, Sequence, TypeAlias
@@ -56,9 +57,19 @@ ShapingFunction: TypeAlias = Callable[[PArrayOrScalar, PArrayOrScalar, PArrayOrS
 
 # Shaping method identifiers for interpolation
 ShapingMethod: TypeAlias = Literal[
-    "linear", "quadraticIn", "quadraticOut", "quadraticInOut",
-    "cubicIn", "cubicOut", "cubicInOut", "exponentialIn",
-    "exponentialOut", "cosineInOut", "sigmoid", "seat", "step"
+    "linear",
+    "quadraticIn",
+    "quadraticOut",
+    "quadraticInOut",
+    "cubicIn",
+    "cubicOut",
+    "cubicInOut",
+    "exponentialIn",
+    "exponentialOut",
+    "cosineInOut",
+    "sigmoid",
+    "seat",
+    "step",
 ]
 
 # Gradient styles for color gradients

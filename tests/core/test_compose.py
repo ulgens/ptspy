@@ -6,6 +6,7 @@ from ptspy.core import compose
 
 try:
     import cupy  # type: ignore[import-untyped]
+
     HAS_CUPY = True
     HAS_CUDA = cupy.cuda.is_available()
 except ImportError:
@@ -74,15 +75,17 @@ def test_random_seed_and_range():
 
 @pytest.mark.skipif(not HAS_CUDA, reason="CuPy/CUDA not available")
 def test_random_with_numpy_rng_stays_on_active_cupy_backend():
-    npw.reset('cupy')
+    npw.reset("cupy")
     try:
         rng = np.random.default_rng(5)
         result = compose.random((2,), min=0, max=1, rng=rng)
         assert isinstance(result, cupy.ndarray)
         assert result.dtype == cupy.float32
-        np.testing.assert_allclose(cupy.asnumpy(result), np.random.default_rng(5).uniform(0, 1, (2,)).astype(np.float32))
+        np.testing.assert_allclose(
+            cupy.asnumpy(result), np.random.default_rng(5).uniform(0, 1, (2,)).astype(np.float32)
+        )
     finally:
-        npw.reset('numpy')
+        npw.reset("numpy")
 
 
 def test_irregular_bounds_and_sorting():

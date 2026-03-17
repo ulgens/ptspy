@@ -7,7 +7,8 @@ from ptspy.core import util
 from ptspy.core.form import Form
 
 try:
-    import cupy  # type: ignore[import-untyped]
+    import cupy  # type: ignore[import-untyped]  # noqa: F401
+
     HAS_CUPY = True
 except ImportError:
     HAS_CUPY = False
@@ -39,7 +40,7 @@ def test_color_conversions_round_trip_and_formats():
     assert util.toARGB(0x112233FF) == 0xFF112233
     assert util.toARGB(0x112233, hasAlpha=False) == 0xFF112233
 
-    assert util.toARGBInt("#abc") == 0xFFaabbcc
+    assert util.toARGBInt("#abc") == 0xFFAABBCC
     assert util.toARGBInt("#112233FF") == 0xFF112233
     assert util.toARGBInt(0x112233, hasAlpha=False) == 0xFF112233
     assert util.toARGBInt([0x112233]) == 0xFF112233
@@ -54,14 +55,14 @@ def test_color_conversions_round_trip_and_formats():
 
 @pytest.mark.skipif(not HAS_CUPY, reason="CuPy not installed")
 def test_color_scalar_numpy_integer_still_works_under_cupy_backend():
-    npw.reset('cupy')
+    npw.reset("cupy")
     try:
         color = np.uint32(0x112233)
         assert util.validateColorLike(color) is color
         assert util.toARGBInt(color, hasAlpha=False) == 0xFF112233
         assert util.toARGBInt([color]) == 0xFF112233
     finally:
-        npw.reset('numpy')
+        npw.reset("numpy")
 
 
 def test_get_color_clamps_and_alpha():

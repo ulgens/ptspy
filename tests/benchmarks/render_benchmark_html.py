@@ -122,7 +122,9 @@ def render_html(
     for group_name, benches in grouped_benchmarks(current_benchmarks):
         metric_bests: dict[str, float | None] = {}
         for metric_name in ("min", "median", "mean", "max", "stddev", "iqr", "ops"):
-            values = [bench["stats"].get(metric_name) for bench in benches if bench["stats"].get(metric_name) is not None]
+            values = [
+                bench["stats"].get(metric_name) for bench in benches if bench["stats"].get(metric_name) is not None
+            ]
             if not values:
                 metric_bests[metric_name] = None
             elif metric_direction(metric_name) == "higher":
@@ -159,7 +161,8 @@ def render_html(
                 f"<td>{format_number(stats.get('rounds'))}</td>"
                 f"<td>{format_number(stats.get('iterations'))}</td>"
                 f"<td>{format_seconds(baseline_metric)}</td>"
-                f"<td class='{delta_klass}'>{'-' if delta_percent is None else f'{delta_percent:+.2f}%'}" "</td>"
+                f"<td class='{delta_klass}'>{'-' if delta_percent is None else f'{delta_percent:+.2f}%'}"
+                "</td>"
                 "</tr>"
             )
 
@@ -185,7 +188,7 @@ def render_html(
           </tr>
         </thead>
         <tbody>
-          {''.join(rows)}
+          {"".join(rows)}
         </tbody>
       </table>
     </section>
@@ -328,9 +331,9 @@ def render_html(
         <div><strong>Baseline run:</strong> {compare_label}</div>
         <div><strong>Compare metric:</strong> {html.escape(metric)}</div>
         <div><strong>Regression threshold:</strong> {threshold_label}</div>
-        <div><strong>Machine:</strong> {html.escape(machine.get('node', '-'))}</div>
-        <div><strong>Python:</strong> {html.escape(machine.get('python_version', '-'))}</div>
-        <div><strong>Commit:</strong> {html.escape(str(commit.get('id', '-')))}</div>
+        <div><strong>Machine:</strong> {html.escape(machine.get("node", "-"))}</div>
+        <div><strong>Python:</strong> {html.escape(machine.get("python_version", "-"))}</div>
+        <div><strong>Commit:</strong> {html.escape(str(commit.get("id", "-")))}</div>
       </div>
       <div class="legend">
         <span class="chip"><span class="swatch" style="background: var(--improved);"></span> improved</span>
@@ -340,7 +343,7 @@ def render_html(
       </div>
     </section>
 
-    {''.join(grouped_sections)}
+    {"".join(grouped_sections)}
   </div>
 </body>
 </html>

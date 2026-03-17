@@ -1,11 +1,9 @@
 """Skia-backed drawing surface and helpers."""
+
 import functools
 import numpy as _cpu_numpy  # Permanent reference to CPU numpy for Skia boundary operations
 from .. import np_wrapper as np
-from typing import (
-    Union, Any, Callable, Sequence, Optional,
-    cast, Concatenate, ParamSpec, TypeVar, Tuple
-)
+from typing import Union, Any, Callable, Sequence, Optional, cast, Concatenate, ParamSpec, TypeVar, Tuple
 from ptspy.typing import (
     ColorLike,
     StrokeJoinCap,
@@ -52,8 +50,7 @@ def _requireOpenGL() -> tuple[Any, Any]:
     if missing:
         names = ", ".join(missing)
         raise RuntimeError(
-            f"OpenGL support requires optional dependencies ({names}). "
-            "Install them with `pip install 'ptspy[opengl]'`."
+            f"OpenGL support requires optional dependencies ({names}). Install them with `pip install 'ptspy[opengl]'`."
         )
 
     return cast(Any, GL), cast(Any, glfw)
@@ -1412,7 +1409,6 @@ class Form:
 
         return self
 
-
     def image(self, table: IntArray, rect: NumberSequence2D, filterMode: str | None = "nearest") -> "Form":
         """
         Draw a color table into a rectangle as a bitmap image.
@@ -1743,7 +1739,6 @@ class Form:
             self.canvas.drawPaint(clear_paint)
 
         return self
-
 
 
 @partial(optional=True)

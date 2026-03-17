@@ -1,11 +1,27 @@
 """Visual regression tests based on QuickStart and Stamps notebook examples."""
+
 import numpy as np
 from ptspy import (
-    frame, frames, P, steps, expand, colorCube, colorPicker,
-    colorInterpolation, colorScheme, gradient, randomizer, regularPolygon,
-    populate, pipeline, F, TBD, partial,
-    sampleBezier, sampleBspline, sampleCardinal,
-    bsplineToBezier, cardinalToBezier, hermiteToBezier,
+    frame,
+    frames,
+    P,
+    steps,
+    expand,
+    colorCube,
+    colorPicker,
+    colorInterpolation,
+    colorScheme,
+    gradient,
+    randomizer,
+    regularPolygon,
+    populate,
+    pipeline,
+    F,
+    TBD,
+    sampleBezier,
+    sampleBspline,
+    sampleCardinal,
+    hermiteToBezier,
 )
 
 
@@ -13,8 +29,10 @@ from ptspy import (
 # QuickStart examples
 # =============================================================================
 
+
 def test_quickstart_dot(visualTest):
     """Simple centered dot."""
+
     @frame(size=(100, 100))
     def draw(form):
         form.fillOnly("000").point(form.size / 2, 10)
@@ -24,6 +42,7 @@ def test_quickstart_dot(visualTest):
 
 def test_quickstart_dot_dark(visualTest):
     """Dot on dark background."""
+
     @frame(bg="000", size=(100, 100))
     def draw(form):
         form.fillOnly("f0f3f7").point(form.size / 2, 30)
@@ -33,6 +52,7 @@ def test_quickstart_dot_dark(visualTest):
 
 def test_quickstart_color_cube_slice(visualTest):
     """Color cube middle slice."""
+
     @frame(size=(100, 100))
     def draw(form):
         cube = colorCube(25)
@@ -44,6 +64,7 @@ def test_quickstart_color_cube_slice(visualTest):
 
 def test_quickstart_color_picker(visualTest):
     """Nested rectangles with picked colors."""
+
     @frame(size=(100, 100))
     def draw(form):
         cube = colorCube(30)
@@ -55,6 +76,7 @@ def test_quickstart_color_picker(visualTest):
 
 def test_quickstart_color_scheme(visualTest):
     """Color scheme palette circles."""
+
     @frame(bg="#00000000", size=(150, 100))
     def draw(form):
         cube = colorCube(steps=24)
@@ -67,6 +89,7 @@ def test_quickstart_color_scheme(visualTest):
 
 def test_quickstart_color_interpolation(visualTest):
     """Batched color interpolation paths."""
+
     @frame(bg="#00000000", size=(100, 100))
     def draw(form):
         cc = colorCube(steps=100)
@@ -81,6 +104,7 @@ def test_quickstart_color_interpolation(visualTest):
 
 def test_quickstart_gradient(visualTest):
     """Sweep gradient with stops."""
+
     @frame(size=(100, 100))
     def draw(form):
         colors = [0xFF2099FF, 0xFFFF66FF, 0x20CCE0FF]
@@ -92,6 +116,7 @@ def test_quickstart_gradient(visualTest):
 
 def test_quickstart_steps_shaping(visualTest):
     """Points with cubicOut shaping."""
+
     # Original: 300x300, steps([40, 150], [260, 150], count=20)
     # Scaled: 100x100, steps([13, 50], [87, 50], count=20)
     @frame(bg="000", size=(100, 100))
@@ -104,6 +129,7 @@ def test_quickstart_steps_shaping(visualTest):
 
 def test_quickstart_polygon_recursive(visualTest):
     """Recursive polygon pattern."""
+
     # Original: 300x300, radius=40, center=[150,150], points radius=3
     # Scaled: 100x100, radius=13.3, center=[50,50], points radius=1
     @frame(bg="000", size=(100, 100))
@@ -133,6 +159,7 @@ def test_quickstart_polygon_recursive(visualTest):
 
 def test_quickstart_lines_animation(visualTest):
     """Animated lines with dynamic shaping."""
+
     # Original: 300x300, 60 frames, 20 steps, width 10-4
     # Scaled: 100x100, 5 frames, 7 steps, width 3.3-1.3
     @frames(bg="000", size=(100, 100), numFrames=5)
@@ -149,6 +176,7 @@ def test_quickstart_lines_animation(visualTest):
 
 def test_quickstart_growing_dot(visualTest):
     """Growing dot animation."""
+
     # Original: default size (512x512), 60 frames, radius = 10 + index
     # Scaled: 100x100, 5 frames, radius = 2 + index*2
     @frames(size=(100, 100), numFrames=5)
@@ -162,8 +190,6 @@ def test_quickstart_points_partial_animation(visualTest):
     """Animated points with partial application."""
     # Original: 300x300, 60 frames, steps from [40,150] to dynamic end
     # Scaled: 100x100, 5 frames
-    from ptspy import partial
-
     pointsFn = steps([13, 50], shaping="cubicOut")
 
     @frames(bg="000", size=(100, 100), numFrames=5)
@@ -238,9 +264,11 @@ def test_quickstart_polygon_progress_animation(visualTest):
 # Stamps examples (scaled down from 600px to 150px)
 # =============================================================================
 
+
 def _perforate(size, hole=2.5):
     """Create perforation pattern scaled for smaller stamps."""
     import skia
+
     steps_arr = populate(21, increment=7.5)  # scaled from 30 to 7.5 (150/600 = 0.25)
     edges = skia.Path()
     for s in steps_arr:
@@ -279,8 +307,12 @@ def test_stamp_1_points(visualTest):
         one = steps([25, padding * 2.5, 5], [25, boundSize, 0.5], count=20, shaping="linear")
         two = steps([50, padding * 2, 0.5], [50, boundSize - padding * 2, 15], count=10, shaping="quadraticOut")
         three = steps([75, padding * 2.5, 5], [75, boundSize, 0.5], count=20, shaping="cubicInOut")
-        four = steps([100, padding * 2, 0.5], [100, boundSize - padding * 2, 15], count=10,
-                     shaping=lambda t, a, b: a + (b - a) * (t * t * t))
+        four = steps(
+            [100, padding * 2, 0.5],
+            [100, boundSize - padding * 2, 15],
+            count=10,
+            shaping=lambda t, a, b: a + (b - a) * (t * t * t),
+        )
 
         form.fillOnly("000").rect(bounds)
         form.fillOnly("fff").points(one).points(two).points(three).points(four)
@@ -339,8 +371,10 @@ def test_stamp_3_color(visualTest):
 # Form.polygons tests
 # =============================================================================
 
+
 def test_polygons_variable_length(visualTest):
     """Polygons with different vertex counts (triangle, square, pentagon, hexagon)."""
+
     @frame(bg="fff", size=(100, 100))
     def draw(form):
         poly = regularPolygon(center=TBD, radius=20, sides=TBD, closed=True)
@@ -354,6 +388,7 @@ def test_polygons_variable_length(visualTest):
 # =============================================================================
 # Form transformation tests
 # =============================================================================
+
 
 def test_transforms_all(visualTest):
     """Canvas transformations: translate, rotate, scale, skew, concat, resetMatrix."""
@@ -413,12 +448,13 @@ def test_transforms_all(visualTest):
 # Bezier and Cardinal curve tests
 # =============================================================================
 
+
 def test_bezier_open(visualTest):
     """Open cubic Bezier curve with two segments."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
-        pts = P([10, 80], [40, 10], [60, 10], [80, 50],
-                [100, 90], [130, 90], [140, 20])
+        pts = P([10, 80], [40, 10], [60, 10], [80, 50], [100, 90], [130, 90], [140, 20])
         form.strokeOnly("000", 2).bezier(pts)
         # Draw control points for reference
         form.fillOnly("e74c3c").points(pts, 2)
@@ -428,10 +464,10 @@ def test_bezier_open(visualTest):
 
 def test_bezier_closed(visualTest):
     """Closed cubic Bezier curve forming a loop."""
+
     @frame(bg="fff", size=(100, 100))
     def draw(form):
-        pts = P([50, 10], [90, 30], [80, 50], [50, 50],
-                [20, 50], [10, 30], [50, 10])
+        pts = P([50, 10], [90, 30], [80, 50], [50, 50], [20, 50], [10, 30], [50, 10])
         form.fillOnly("3498db").stroke("000", 2).bezier(pts, closed=True)
 
     visualTest(draw, "bezier_closed")
@@ -439,6 +475,7 @@ def test_bezier_closed(visualTest):
 
 def test_cardinal_open(visualTest):
     """Open cardinal spline through control points (tension=0.25)."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
         pts = P([10, 50], [40, 10], [75, 90], [110, 30], [140, 60])
@@ -451,6 +488,7 @@ def test_cardinal_open(visualTest):
 
 def test_cardinal_closed(visualTest):
     """Closed cardinal spline forming a smooth loop."""
+
     @frame(bg="fff", size=(100, 100))
     def draw(form):
         pts = P([50, 10], [85, 30], [85, 70], [50, 90], [15, 70], [15, 30])
@@ -462,6 +500,7 @@ def test_cardinal_closed(visualTest):
 
 def test_cardinal_tension_comparison(visualTest):
     """Cardinal splines at different tensions overlaid for comparison."""
+
     @frame(bg="fff", size=(200, 120))
     def draw(form):
         pts = P([15, 60], [55, 15], [100, 100], [145, 30], [185, 70])
@@ -479,10 +518,10 @@ def test_cardinal_tension_comparison(visualTest):
 
 def test_sampleBezier_visual(visualTest):
     """Bezier curve with 3 sampled sub-points per segment shown as dots."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
-        pts = P([10, 80], [40, 10], [60, 10], [80, 50],
-                [100, 90], [130, 90], [140, 20])
+        pts = P([10, 80], [40, 10], [60, 10], [80, 50], [100, 90], [130, 90], [140, 20])
         # Draw curve
         form.strokeOnly("000", 2).bezier(pts)
         # Sample 3 extra sub-points per segment (4 = anchor + 3 interior)
@@ -496,6 +535,7 @@ def test_sampleBezier_visual(visualTest):
 
 def test_sampleCardinal_visual(visualTest):
     """Cardinal spline with 3 sampled sub-points per segment shown as dots."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
         pts = P([10, 50], [40, 10], [75, 90], [110, 30], [140, 60])
@@ -514,8 +554,10 @@ def test_sampleCardinal_visual(visualTest):
 # Hermite spline tests
 # =============================================================================
 
+
 def test_hermite_open(visualTest):
     """Open hermite spline with explicit tangents."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
         pts = P([10, 50], [40, 10], [75, 90], [110, 30], [140, 60])
@@ -528,6 +570,7 @@ def test_hermite_open(visualTest):
 
 def test_hermite_closed(visualTest):
     """Closed hermite spline forming a smooth loop."""
+
     @frame(bg="fff", size=(100, 100))
     def draw(form):
         pts = P([50, 10], [85, 30], [85, 70], [50, 90], [15, 70], [15, 30])
@@ -540,6 +583,7 @@ def test_hermite_closed(visualTest):
 
 def test_sampleHermite_visual(visualTest):
     """sampleBezier(hermiteToBezier(...)) with 3 sub-points per segment."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
         pts = P([10, 50], [40, 10], [75, 90], [110, 30], [140, 60])
@@ -557,8 +601,10 @@ def test_sampleHermite_visual(visualTest):
 # B-spline tests
 # =============================================================================
 
+
 def test_bspline_open(visualTest):
     """Open uniform cubic B-spline (approximating — curve does not pass through points)."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
         pts = P([10, 50], [30, 10], [60, 90], [100, 10], [130, 50], [140, 80])
@@ -571,6 +617,7 @@ def test_bspline_open(visualTest):
 
 def test_bspline_closed(visualTest):
     """Closed B-spline forming a smooth loop."""
+
     @frame(bg="fff", size=(100, 100))
     def draw(form):
         pts = P([50, 10], [85, 30], [85, 70], [50, 90], [15, 70], [15, 30])
@@ -582,6 +629,7 @@ def test_bspline_closed(visualTest):
 
 def test_sampleBspline_visual(visualTest):
     """sampleBspline with 3 sub-points per segment shown as dots."""
+
     @frame(bg="fff", size=(150, 100))
     def draw(form):
         pts = P([10, 50], [30, 10], [60, 90], [100, 10], [130, 50], [140, 80])
@@ -597,6 +645,7 @@ def test_sampleBspline_visual(visualTest):
 # Shader stroke & partial clear tests
 # =============================================================================
 
+
 def test_stroke_shader(visualTest):
     """strokeOnly with a gradient shader draws stroked shapes with shader color."""
     import skia
@@ -605,7 +654,7 @@ def test_stroke_shader(visualTest):
     def draw(form):
         shader = skia.GradientShader.MakeLinear(
             points=[(0, 0), (150, 100)],
-            colors=[0xFF3498db, 0xFFe74c3c],
+            colors=[0xFF3498DB, 0xFFE74C3C],
         )
         # Stroked circle with gradient shader
         form.strokeOnly(shader, width=4).circle(P([30, 50], [70, 90]))
@@ -619,6 +668,7 @@ def test_stroke_shader(visualTest):
 
 def test_clear_partial_alpha(visualTest):
     """clear() with alpha < 1.0 fades existing content instead of replacing."""
+
     @frame(bg="000", size=(100, 100))
     def draw(form):
         # Draw a white filled rect on the left half
@@ -636,6 +686,7 @@ def test_clear_partial_alpha(visualTest):
 # =============================================================================
 # Noise tests
 # =============================================================================
+
 
 def test_poisson_disc(visualTest):
     """Poisson-disc sampling rendered as scattered points."""

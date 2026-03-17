@@ -4,6 +4,7 @@ Usage:
     python examples/export_image.py                  # 300x300 default
     python examples/export_image.py --size 600       # 600x600
 """
+
 import argparse
 from pathlib import Path
 

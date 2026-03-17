@@ -69,7 +69,7 @@ def parse_examples(text):
     if not text.strip():
         return text
 
-    lines = text.split('\n')
+    lines = text.split("\n")
 
     # Find the minimum indentation (excluding empty lines)
     non_empty_lines = [line for line in lines if line.strip()]
@@ -84,9 +84,9 @@ def parse_examples(text):
         if line.strip():  # Non-empty line
             cleaned_lines.append(line[min_indent:] if len(line) >= min_indent else line)
         else:  # Empty line
-            cleaned_lines.append('')
+            cleaned_lines.append("")
 
-    return '\n'.join(cleaned_lines)
+    return "\n".join(cleaned_lines)
 
 
 def extract_types(type_string):
@@ -144,10 +144,10 @@ def parse_args(text, context=""):
                 next_line = arg_lines[i]
                 # Check if this is a continuation line (indented, starts with -, or empty)
                 if (
-                    next_line.startswith("        ") or  # indented continuation
-                    next_line.strip().startswith("-") or  # bullet point
-                    (not arg_pattern.match(next_line) and not next_line.startswith("Args:"))):
-
+                    next_line.startswith("        ")  # indented continuation
+                    or next_line.strip().startswith("-")  # bullet point
+                    or (not arg_pattern.match(next_line) and not next_line.startswith("Args:"))
+                ):
                     # Add the continuation line, preserving some formatting
                     if next_line.strip():
                         full_info += " " + next_line.strip()
@@ -344,6 +344,7 @@ def get_category_from_path(file_path):
         str: The module name without extension.
     """
     import os
+
     return os.path.splitext(os.path.basename(file_path))[0]
 
 
@@ -366,7 +367,11 @@ def extract_docstrings(file_path, input_base):
             return None
 
     docstrings = {
-        "module": {"docstring": split_docstring(ast.get_docstring(tree), file_path[len(input_base) :]), "source": [file_path[len(input_base) :], 1], "category": get_category_from_path(file_path)},
+        "module": {
+            "docstring": split_docstring(ast.get_docstring(tree), file_path[len(input_base) :]),
+            "source": [file_path[len(input_base) :], 1],
+            "category": get_category_from_path(file_path),
+        },
         "classes": {},
         "functions": {},
     }
@@ -379,7 +384,7 @@ def extract_docstrings(file_path, input_base):
 
             class_docstring = ast.get_docstring(node)
             docstrings["classes"][node.name] = {
-                "docstring": split_docstring(class_docstring, f"{file_path[len(input_base):]}:{node.name}"),
+                "docstring": split_docstring(class_docstring, f"{file_path[len(input_base) :]}:{node.name}"),
                 "source": [file_path[len(input_base) :], node.lineno],
                 "category": get_category_from_path(file_path),
                 "methods": {},
@@ -397,21 +402,17 @@ def extract_docstrings(file_path, input_base):
 
                     method_docstring = ast.get_docstring(class_node)
                     method_details = {
-                        "docstring": split_docstring(method_docstring, f"{file_path[len(input_base):]}:{node.name}.{class_node.name}"),
+                        "docstring": split_docstring(
+                            method_docstring, f"{file_path[len(input_base) :]}:{node.name}.{class_node.name}"
+                        ),
                         "source": [file_path[len(input_base) :], class_node.lineno],
                         "category": get_category_from_path(file_path),
                     }
                     # Check for staticmethod decorator
-                    if any(
-                        get_decorator_name(decorator) == "staticmethod"
-                        for decorator in class_node.decorator_list
-                    ):
+                    if any(get_decorator_name(decorator) == "staticmethod" for decorator in class_node.decorator_list):
                         method_details["static"] = True
                     # Check for curry decorator
-                    if any(
-                        get_decorator_name(decorator) == "curry"
-                        for decorator in class_node.decorator_list
-                    ):
+                    if any(get_decorator_name(decorator) == "curry" for decorator in class_node.decorator_list):
                         method_details["curry"] = True
                     docstrings["classes"][node.name]["methods"][class_node.name] = method_details
                     if not method_docstring:
@@ -428,21 +429,15 @@ def extract_docstrings(file_path, input_base):
 
             func_docstring = ast.get_docstring(node)
             func_details = {
-                "docstring": split_docstring(func_docstring, f"{file_path[len(input_base):]}:{node.name}"),
+                "docstring": split_docstring(func_docstring, f"{file_path[len(input_base) :]}:{node.name}"),
                 "source": [file_path[len(input_base) :], node.lineno],
                 "category": get_category_from_path(file_path),
             }
             # Check for staticmethod decorator
-            if any(
-                get_decorator_name(decorator) == "staticmethod"
-                for decorator in node.decorator_list
-            ):
+            if any(get_decorator_name(decorator) == "staticmethod" for decorator in node.decorator_list):
                 func_details["static"] = True
             # Check for curry decorator
-            if any(
-                get_decorator_name(decorator) == "curry"
-                for decorator in node.decorator_list
-            ):
+            if any(get_decorator_name(decorator) == "curry" for decorator in node.decorator_list):
                 func_details["curry"] = True
             docstrings["functions"][node.name] = func_details
             if not func_docstring:
@@ -733,8 +728,12 @@ def convert_to_json(source_dir, output_json, output_markdown=None, preamble=None
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert Python docstrings to JSON and Markdown.")
     parser.add_argument("-i", "--input", default="../src/ptspy", help="Input source directory (default: ../src/ptspy)")
-    parser.add_argument("-o", "--output", default="./src/assets/docs.json", help="Output JSON file (default: ./src/assets/docs.json)")
-    parser.add_argument("-m", "--markdown", default="./public/docs.md", help="Output Markdown file (default: ./public/docs.md)")
+    parser.add_argument(
+        "-o", "--output", default="./src/assets/docs.json", help="Output JSON file (default: ./src/assets/docs.json)"
+    )
+    parser.add_argument(
+        "-m", "--markdown", default="./public/docs.md", help="Output Markdown file (default: ./public/docs.md)"
+    )
     parser.add_argument("-p", "--preamble", default=None, help="Path to preamble file for llms-full.txt generation")
     parser.add_argument("-l", "--llms-full", default=None, help="Output path for llms-full.txt")
     args = parser.parse_args()

@@ -1,16 +1,21 @@
 """Utility helpers for colors, arrays, and Skia integration."""
+
 import numpy as _cpu_numpy  # Permanent reference to CPU numpy for Skia boundary operations
 from .. import np_wrapper as np
 
 from typing import Any, Optional, Union, Sequence
 from numpy.typing import ArrayLike, NDArray
 from ptspy.typing import (
-    NumberSequenceND, PArray, ColorLike,
-    IntArrayOrScalar, IntArray, NumberSequence1D, NumberSequence2D
+    NumberSequenceND,
+    PArray,
+    ColorLike,
+    IntArrayOrScalar,
+    IntArray,
+    NumberSequence1D,
+    NumberSequence2D,
 )
 from .elements import toPArray, partial
 import skia
-
 
 
 def _validateNDim(name: str, arr: np.ndarray, ndim: int) -> None:
@@ -305,6 +310,7 @@ def getSkiaProp(id: str) -> Any:
     except KeyError as exc:
         raise KeyError(f"Unknown skia prop id '{id}'") from exc
 
+
 def toRGBA(argb: IntArrayOrScalar):
     """
     Converts an ARGB color value to RGBA format.
@@ -508,7 +514,7 @@ def imageToArray(image: skia.Image, asGrayscale: bool = False) -> PArray:
     return array.astype(np.float32) / 255.0
 
 
-def arrayToImage(imageData:PArray, min=None, max=None, alwaysRGBA: bool = False) -> IntArray:
+def arrayToImage(imageData: PArray, min=None, max=None, alwaysRGBA: bool = False) -> IntArray:
     """
     Convert a numeric array to packed 32-bit pixels.
 
@@ -559,4 +565,6 @@ def arrayToImage(imageData:PArray, min=None, max=None, alwaysRGBA: bool = False)
         return (a << 24) | (r << 16) | (g << 8) | b
 
     else:
-        raise ValueError(f"Unsupported array shape: {imageData.shape}. Expected grayscale (height, width), RGB (height, width, 3), or RGBA (height, width, 4)")
+        raise ValueError(
+            f"Unsupported array shape: {imageData.shape}. Expected grayscale (height, width), RGB (height, width, 3), or RGBA (height, width, 4)"
+        )

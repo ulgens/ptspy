@@ -1,7 +1,6 @@
 """Core array helpers and partial-application utilities."""
-from ptspy.typing import (
-    PArrayLike, PArray, NumberSequenceND
-)
+
+from ptspy.typing import PArrayLike, PArray, NumberSequenceND
 import functools
 import inspect
 from .. import np_wrapper as np
@@ -13,6 +12,7 @@ from typing import (
     Tuple,
 )
 
+
 # Create a sentinel type that can represent any type for partial function placeholders
 class _TBDType:
     """
@@ -21,12 +21,14 @@ class _TBDType:
     Compare this sentinel by identity (`is`), not by equality (`==`).
     This type is compatible with any other type for static type checking.
     """
+
     def __repr__(self) -> str:
         return "TBD"
 
     def __reduce__(self):
         """Preserve singleton identity across pickle/copy reconstruction."""
         return (_getTBDSingleton, ())
+
 
 # Create a singleton instance that can be used anywhere
 TBD: Any = _TBDType()
@@ -80,7 +82,9 @@ def partial(
         params = tuple(sig.parameters.values())
 
         # Pre-compute parameter sets once (performance optimization)
-        required = frozenset(p.name for p in params if p.default is p.empty and p.kind not in (p.VAR_POSITIONAL, p.VAR_KEYWORD))
+        required = frozenset(
+            p.name for p in params if p.default is p.empty and p.kind not in (p.VAR_POSITIONAL, p.VAR_KEYWORD)
+        )
         non_variadic = frozenset(p.name for p in params if p.kind not in (p.VAR_POSITIONAL, p.VAR_KEYWORD))
 
         # -------- helpers --------------------------------------------------
@@ -88,7 +92,9 @@ def partial(
         def mergeKeywords(base: Dict[str, Any], inc: Dict[str, Any]) -> Dict[str, Any]:
             dup = set(base) & set(inc)
             if dup:
-                raise TypeError(f"{fn.__name__}() got multiple values for keyword argument(s): {', '.join(sorted(dup))}")
+                raise TypeError(
+                    f"{fn.__name__}() got multiple values for keyword argument(s): {', '.join(sorted(dup))}"
+                )
             return {**base, **inc}
 
         def fillPlaceholders(existing: Tuple[Any, ...], incoming: Tuple[Any, ...]) -> Tuple[Any, ...]:

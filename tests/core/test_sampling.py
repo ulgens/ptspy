@@ -1,4 +1,5 @@
 """Tests for ptspy.more.sampling — Poisson-Disc sampling."""
+
 import numpy as np
 import pytest
 from ptspy.more.sampling import poissonDisc
@@ -7,6 +8,7 @@ from ptspy.more.sampling import poissonDisc
 # ---------------------------------------------------------------------------
 # Basic output shape and dimensionality
 # ---------------------------------------------------------------------------
+
 
 def test_poissonDisc_2d_default():
     """2D sampling returns (N, 2) array."""
@@ -37,13 +39,14 @@ def test_poissonDisc_1d():
 # Core guarantees
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_minimum_distance():
     """All pairwise distances must be >= radius."""
     radius = 8.0
     pts = poissonDisc([100, 100], radius, seed=7)
     # Broadcast pairwise distance check
     diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))
+    dists = np.sqrt(np.sum(diff**2, axis=-1))
     np.fill_diagonal(dists, np.inf)
     assert np.all(dists >= radius - 1e-5), f"Min pairwise distance {dists.min():.6f} < {radius}"
 
@@ -60,6 +63,7 @@ def test_poissonDisc_bounds():
 # ---------------------------------------------------------------------------
 # Reproducibility
 # ---------------------------------------------------------------------------
+
 
 def test_poissonDisc_seed_reproducibility():
     """Same seed produces identical output."""
@@ -79,6 +83,7 @@ def test_poissonDisc_different_seeds():
 # Point count sanity
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_point_count_reasonable():
     """Point count should be within a plausible range for given area and radius."""
     bounds = [200, 200]
@@ -94,6 +99,7 @@ def test_poissonDisc_point_count_reasonable():
 # ---------------------------------------------------------------------------
 # Invalid inputs
 # ---------------------------------------------------------------------------
+
 
 def test_poissonDisc_invalid_radius_zero():
     with pytest.raises(ValueError, match="radius must be positive"):
@@ -124,6 +130,7 @@ def test_poissonDisc_negative_bounds():
 # RNG parameter
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_rng_parameter():
     """Passing an explicit rng works and respects its state."""
     rng1 = np.random.default_rng(42)
@@ -137,6 +144,7 @@ def test_poissonDisc_rng_parameter():
 # Partial application
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_partial():
     """poissonDisc supports partial application via @partial decorator."""
     sampler = poissonDisc([100, 100])
@@ -148,6 +156,7 @@ def test_poissonDisc_partial():
 # ---------------------------------------------------------------------------
 # Scalar bounds
 # ---------------------------------------------------------------------------
+
 
 def test_poissonDisc_scalar_bounds():
     """Scalar bounds produces 1-D points."""
@@ -164,7 +173,7 @@ def test_poissonDisc_scalar_bounds_minimum_distance():
     radius = 5.0
     pts = poissonDisc(100, radius, seed=7)
     diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))
+    dists = np.sqrt(np.sum(diff**2, axis=-1))
     np.fill_diagonal(dists, np.inf)
     assert np.all(dists >= radius - 1e-5)
 
@@ -172,6 +181,7 @@ def test_poissonDisc_scalar_bounds_minimum_distance():
 # ---------------------------------------------------------------------------
 # Bounding-box bounds [[min], [max]]
 # ---------------------------------------------------------------------------
+
 
 def test_poissonDisc_bbox_2d():
     """2-D bounds [[x0,y0],[x1,y1]] constrains points to that box."""
@@ -188,7 +198,7 @@ def test_poissonDisc_bbox_minimum_distance():
     radius = 10.0
     pts = poissonDisc([[200, 300], [300, 400]], radius, seed=7)
     diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))
+    dists = np.sqrt(np.sum(diff**2, axis=-1))
     np.fill_diagonal(dists, np.inf)
     assert np.all(dists >= radius - 1e-5)
 
@@ -210,6 +220,7 @@ def test_poissonDisc_bbox_inverted():
 # Edge cases
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_radius_larger_than_domain():
     """When radius > domain diameter, only one point is returned."""
     pts = poissonDisc([10, 10], 20, seed=42)
@@ -230,7 +241,7 @@ def test_poissonDisc_elongated_bounds():
     assert xSpread > ySpread * 2, "Points should spread further in the longer dimension"
     # Distance guarantee
     diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))
+    dists = np.sqrt(np.sum(diff**2, axis=-1))
     np.fill_diagonal(dists, np.inf)
     assert np.all(dists >= radius - 1e-5)
 
@@ -247,26 +258,26 @@ def test_poissonDisc_tiny_domain():
 # k parameter effect
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_higher_k_more_points():
     """Higher k (more candidates) should generally produce at least as many points."""
     ptsLowK = poissonDisc([100, 100], 8, k=5, seed=42)
     ptsHighK = poissonDisc([100, 100], 8, k=100, seed=42)
     # Higher k explores more aggressively, so should pack at least as tightly
     # Allow some tolerance since RNG paths diverge
-    assert len(ptsHighK) >= len(ptsLowK) * 0.8, (
-        f"k=100 produced {len(ptsHighK)} points vs k=5 produced {len(ptsLowK)}"
-    )
+    assert len(ptsHighK) >= len(ptsLowK) * 0.8, f"k=100 produced {len(ptsHighK)} points vs k=5 produced {len(ptsLowK)}"
 
 
 # ---------------------------------------------------------------------------
 # 3D minimum distance
 # ---------------------------------------------------------------------------
 
+
 def test_poissonDisc_3d_minimum_distance():
     """3D sampling respects minimum distance constraint."""
     radius = 12.0
     pts = poissonDisc([50, 50, 50], radius, seed=7)
     diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))
+    dists = np.sqrt(np.sum(diff**2, axis=-1))
     np.fill_diagonal(dists, np.inf)
     assert np.all(dists >= radius - 1e-5), f"Min pairwise distance {dists.min():.6f} < {radius}"

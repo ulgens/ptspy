@@ -42,6 +42,7 @@ def test_clip_rejects_invalid_mode():
 
 def test_perlin_noise_rejects_invalid_type():
     from ptspy.core.form import perlinNoise
+
     with pytest.raises(ValueError, match="type"):
         perlinNoise(0.1, 0.1, 4, 42.0, type="invalid")
 
@@ -190,9 +191,9 @@ def test_polygons_variable_length():
 
     # Variable-length: triangle, square, pentagon
     mixed = [
-        [[10, 10], [20, 10], [15, 20]],              # 3 vertices
-        [[30, 10], [40, 10], [40, 20], [30, 20]],    # 4 vertices
-        [[50, 10], [60, 12], [58, 22], [52, 22], [48, 12]]  # 5 vertices
+        [[10, 10], [20, 10], [15, 20]],  # 3 vertices
+        [[30, 10], [40, 10], [40, 20], [30, 20]],  # 4 vertices
+        [[50, 10], [60, 12], [58, 22], [52, 22], [48, 12]],  # 5 vertices
     ]
     form.strokeOnly("000", width=2).polygons(mixed)
 

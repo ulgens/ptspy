@@ -24,7 +24,6 @@ from ptspy import partial, randomizer, P2, P
 import skia
 
 
-
 def createPerlinNoise2D(
     size: IntArrayOrList,
     seed: Optional[int] = None,
@@ -94,7 +93,6 @@ def skiaPerlinNoise(
     return skia.PerlinNoiseShader.MakeFractalNoise(freqX, freqY, octaves, seed, tileSize)
 
 
-
 class PerlinNoise:
     """
     2D Perlin noise generator class. Typically created via `createPerlinNoise2D` function.
@@ -120,7 +118,8 @@ class PerlinNoise:
         lacunarity: float = 2.0,
         gain: float = 0.5,
         period: Optional[IntArrayOrList] = None,
-        autoTile: bool = False) -> PArray:
+        autoTile: bool = False,
+    ) -> PArray:
         """Shorthand for `generate()` — accepts the same arguments."""
         return self.generate(
             offset=offset,
@@ -136,7 +135,8 @@ class PerlinNoise:
         """Reset the internal grid to its original state."""
         self.grid = getPerlin2DGrid(self.grid.shape[0], self.grid.shape[1])
 
-    def generate(self,
+    def generate(
+        self,
         offset: NumberSequence1D = [0.1, 0.1],
         freq: Union[float, NumberSequence1D] = 1.0,
         *,
@@ -144,7 +144,8 @@ class PerlinNoise:
         lacunarity: float = 2.0,
         gain: float = 0.5,
         period: Optional[IntArrayOrList] = None,
-        autoTile: bool = False):
+        autoTile: bool = False,
+    ):
         """
         Sample one step of 2D Perlin noise or FBM over the internal grid with an optional offset. If octaves > 1, FBM is used.
 
@@ -263,9 +264,7 @@ class PerlinNoise:
         fx, fy = fx0, fy0
 
         for i in range(octaves):
-            (fxi, fyi), periodI = _perOctaveFreqAndPeriod(
-                fx, fy, period, i, lacunarity, autoTile
-            )
+            (fxi, fyi), periodI = _perOctaveFreqAndPeriod(fx, fy, period, i, lacunarity, autoTile)
             total += amp * perlin2D(
                 pts,
                 freq=(fxi, fyi),
@@ -279,18 +278,21 @@ class PerlinNoise:
             fx *= lacunarity
             fy *= lacunarity
 
-        return (total / (maxAmp if maxAmp > 0 else 1))
+        return total / (maxAmp if maxAmp > 0 else 1)
 
 
 # -----------------------------------
 # Internal functions
 
+
 def _fade(t: PArray) -> PArray:
     """Perlin's improved smoothstep: 6t^5 - 15t^4 + 10t^3 (Ken Perlin, "Improving Noise", SIGGRAPH 2002)."""
     return t * t * t * (t * (t * 6 - 15) + 10)
 
+
 def _lerp(a: PArray, b: PArray, t: PArray) -> PArray:
     return a + t * (b - a)
+
 
 def _makePerm(seed: Optional[int]) -> PArray:
     """Build a permutation table: 256 entries shuffled, then duplicated to 512 to avoid index wrapping."""
@@ -300,27 +302,30 @@ def _makePerm(seed: Optional[int]) -> PArray:
 
     return np.concatenate([p, p]).astype(np.int32)
 
+
 def _gradTable2D() -> PArray:
     """8 gradient directions (axes + diagonals), all scaled by 1/sqrt(2) so diagonals have unit length."""
-    return P(
-        [[ 1,  0], [-1,  0], [ 0,  1], [ 0, -1],
-         [ 1,  1], [-1,  1], [ 1, -1], [-1, -1]]
-    ) * (1.0 / np.sqrt(2.0))
+    return P([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) * (1.0 / np.sqrt(2.0))
+
 
 def _hash2D(ix: PArray, iy: PArray, perm: PArray) -> PArray:
     """Hash 2D lattice coords via the 256-entry permutation table (indices masked to 0-255)."""
     return perm[(perm[ix & 255] + (iy & 255)) & 255]
 
+
 def _dot2(g: PArray, dx: PArray, dy: PArray) -> PArray:
     """Dot product of gradient vectors `g` (..., 2) with offset scalars `dx`, `dy` (broadcast-compatible)."""
     return g[..., 0] * dx + g[..., 1] * dy
+
 
 def _asFreqTuple(freq) -> Tuple[float, float]:
     """Normalize freq to (fx, fy): accepts a scalar (applied to both axes) or a 2-element sequence."""
     return (freq, freq) if isinstance(freq, (int, float)) else freq
 
+
 def _perOctaveFreqAndPeriod(
-    fx: float, fy: float,
+    fx: float,
+    fy: float,
     basePeriod: Optional[IntArrayOrList],
     i: int,
     lacunarity: float,
@@ -334,7 +339,7 @@ def _perOctaveFreqAndPeriod(
         px = max(1, int(round(fx)))
         py = max(1, int(round(fy)))
         return (float(px), float(py)), (px, py)
-    scale = lacunarity ** i
+    scale = lacunarity**i
     px = max(1, int(round(basePeriod[0] * scale)))
     py = max(1, int(round(basePeriod[1] * scale)))
     return (fx, fy), (px, py)
@@ -372,7 +377,6 @@ def perlin2D(
     perm: Optional[PArray] = None,
     grads: Optional[PArray] = None,
 ) -> PArray:
-
     """
     Vectorized 2D Perlin noise. Returns values in ~[-1, 1].
 
@@ -393,7 +397,7 @@ def perlin2D(
     if grid.shape[-1] != 2:
         raise ValueError("perlin2D expects pts of shape (..., 2)")
 
-    px, py = (period if period else (None, None))
+    px, py = period if period else (None, None)
     permTab = perm if perm is not None else _makePerm(seed)
     gtab = grads if grads is not None else _gradTable2D()
 
@@ -439,9 +443,9 @@ def perlin2D(
     # top-right(ix1, iy0) uses (fx-1, fy)
     # bot-left(ix0, iy1) uses ( fx, fy-1)
     # bot-right(ix1,iy1) uses (fx-1,fy-1)
-    n00 = _dot2(g00, fx,     fy)
+    n00 = _dot2(g00, fx, fy)
     n10 = _dot2(g10, fx - 1, fy)
-    n01 = _dot2(g01, fx,     fy - 1)
+    n01 = _dot2(g01, fx, fy - 1)
     n11 = _dot2(g11, fx - 1, fy - 1)
 
     # Fade and bilerp

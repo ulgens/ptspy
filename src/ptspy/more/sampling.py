@@ -8,6 +8,7 @@ Example:
     >>> pts = poissonDisc([200, 200], 10, seed=42)
     >>> pts.shape  # (N, 2) where N depends on packing
 """
+
 from __future__ import annotations
 
 import itertools
@@ -82,7 +83,7 @@ def poissonDisc(
 
     # --- pre-allocated point storage ---
     # Upper-bound estimate: area / circle-packing lower bound (generous 2x headroom)
-    estimatedMax = max(int(np.prod(size_arr) / (radius ** d) * 4), 64)
+    estimatedMax = max(int(np.prod(size_arr) / (radius**d) * 4), 64)
     pointsBuf = np.empty((estimatedMax, d), dtype=np.float64)
     nPoints = 0
     active: list[int] = []
@@ -139,7 +140,7 @@ def poissonDisc(
             if len(occupied) > 0:
                 # Vectorized distance check against all occupied neighbors
                 diffs = pointsBuf[occupied] - candidate
-                distsSq = np.einsum('ij,ij->i', diffs, diffs)
+                distsSq = np.einsum("ij,ij->i", diffs, diffs)
                 if np.any(distsSq < radiusSq):
                     continue
 

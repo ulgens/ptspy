@@ -1,3 +1,5 @@
+![video](https://ptspy.org/og-ptspy-v0.1.0.png)
+
 # Pts.py
 
 Pts.py is an experimental librar for for creative coding, visualization and play. It explores principles of visual composability in code. I started this series of explorations, first with an idea about a simple point ([Pt](https://github.com/williamngan/pt), 2015), then an idea about connecting them, ([Pts.js](https://github.com/williamngan/pts), 2017). Starting anew in Pts.py (2025), this is again both a software library and a speculative playground.

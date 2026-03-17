@@ -4,6 +4,7 @@ Usage:
     python examples/export_video.py                  # 200x200, 60 frames
     python examples/export_video.py --size 400       # 400x400
 """
+
 import argparse
 from pathlib import Path
 

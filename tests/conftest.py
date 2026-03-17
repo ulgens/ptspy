@@ -3,6 +3,7 @@ Test configuration to ensure the package under test is importable.
 Adds the repository root's `src` directory to `sys.path` so `import ptspy` works
 for both new and legacy tests.
 """
+
 from __future__ import annotations
 
 import sys

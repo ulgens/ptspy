@@ -1,4 +1,5 @@
 """Tests for the np_wrapper interop helpers."""
+
 import importlib.util
 from pathlib import Path
 import sys
@@ -9,7 +10,7 @@ import pytest
 
 # Import np_wrapper directly to avoid pulling in skia via ptspy.__init__
 _spec = importlib.util.spec_from_file_location(
-    'np_wrapper', str(Path(__file__).resolve().parents[1] / "src" / "ptspy" / "np_wrapper.py")
+    "np_wrapper", str(Path(__file__).resolve().parents[1] / "src" / "ptspy" / "np_wrapper.py")
 )
 npw = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(npw)
@@ -142,25 +143,25 @@ class TestIsarray:
 
 class TestReset:
     def test_reset_to_numpy(self):
-        npw.reset('numpy')
+        npw.reset("numpy")
         arr = npw.array([1, 2, 3])
         assert isinstance(arr, np.ndarray)
 
     def test_helpers_work_after_reset(self):
-        npw.reset('numpy')
+        npw.reset("numpy")
         assert npw.isarray(npw.array([1]))
         np.testing.assert_array_equal(npw.asnumpy(npw.array([1, 2])), [1, 2])
 
     def test_reset_clears_overrides(self):
-        npw.override('linspace', lambda *a, **kw: None)
-        npw.reset('numpy')
+        npw.override("linspace", lambda *a, **kw: None)
+        npw.reset("numpy")
         # Should use real numpy linspace now
         result = npw.linspace(0, 1, 5)
         assert len(result) == 5
 
     def test_getattr_delegates_to_backend(self):
         """Verify __getattr__ still works for standard numpy operations."""
-        npw.reset('numpy')
+        npw.reset("numpy")
         arr = npw.linspace(0, 1, 10)
         assert len(arr) == 10
         assert npw.float32 == np.float32
@@ -168,7 +169,6 @@ class TestReset:
     def test_getattr_raises_for_missing(self):
         with pytest.raises(AttributeError):
             npw.nonexistent_function_xyz
-
 
 
 class TestRoundtrip:
@@ -194,6 +194,7 @@ class TestRoundtrip:
 # Conditional cupy tests
 try:
     import cupy  # type: ignore[import-untyped]
+
     HAS_CUPY = True
     HAS_CUDA = cupy.cuda.is_available()
 except ImportError:
@@ -205,28 +206,29 @@ class TestBackendSwitch:
     """Test backend switching with cupy module (no CUDA needed)."""
 
     def setup_method(self):
-        npw.reset('numpy')
+        npw.reset("numpy")
 
     def teardown_method(self):
-        npw.reset('numpy')
+        npw.reset("numpy")
 
     @pytest.mark.skipif(not HAS_CUPY, reason="CuPy not installed")
     def test_reset_to_cupy_sets_backend(self):
         """reset('cupy') should set _np_module to cupy."""
-        npw.reset('cupy')
+        npw.reset("cupy")
         import cupy
+
         assert npw._np_module is cupy
 
     @pytest.mark.skipif(not HAS_CUPY, reason="CuPy not installed")
     def test_isarray_numpy_still_true_under_cupy(self):
         """numpy arrays should pass isarray even when cupy is active."""
-        npw.reset('cupy')
+        npw.reset("cupy")
         assert npw.isarray(np.array([1, 2])) is True
 
     @pytest.mark.skipif(not HAS_CUPY, reason="CuPy not installed")
     def test_asnumpy_numpy_array_under_cupy(self):
         """asnumpy should still handle numpy arrays when cupy is active."""
-        npw.reset('cupy')
+        npw.reset("cupy")
         arr = np.array([1.0, 2.0, 3.0], dtype=np.float32)
         result = npw.asnumpy(arr)
         assert isinstance(result, np.ndarray)
@@ -235,16 +237,17 @@ class TestBackendSwitch:
     @pytest.mark.skipif(not HAS_CUPY, reason="CuPy not installed")
     def test_reset_back_to_numpy(self):
         """Switching cupy→numpy should restore normal behavior."""
-        npw.reset('cupy')
-        npw.reset('numpy')
+        npw.reset("cupy")
+        npw.reset("numpy")
         arr = npw.array([1, 2, 3])
         assert isinstance(arr, np.ndarray)
 
     @pytest.mark.skipif(not HAS_CUPY, reason="CuPy not installed")
     def test_getattr_delegates_to_cupy(self):
         """__getattr__ should resolve cupy attributes."""
-        npw.reset('cupy')
+        npw.reset("cupy")
         import cupy
+
         assert npw.float32 is cupy.float32
 
     def test_asnumpy_handles_arrays_from_previous_backend_explicitly(self):
@@ -255,7 +258,7 @@ class TestBackendSwitch:
         arr = npw.array([1.0, 2.0, 3.0], dtype=np.float32)
         assert isinstance(arr, fake.ndarray)
 
-        npw.reset('numpy')
+        npw.reset("numpy")
         result = npw.asnumpy(arr)
 
         assert isinstance(result, np.ndarray)
@@ -269,7 +272,7 @@ class TestBackendSwitch:
         arr = npw.array([1.0, 2.0], dtype=np.float32)
         assert isinstance(arr, fake.ndarray)
 
-        npw.reset('numpy')
+        npw.reset("numpy")
         assert npw.isarray(arr) is True
 
 
@@ -278,13 +281,14 @@ class TestCupyInterop:
     """Tests requiring actual CUDA hardware."""
 
     def setup_method(self):
-        npw.reset('cupy')
+        npw.reset("cupy")
 
     def teardown_method(self):
-        npw.reset('numpy')
+        npw.reset("numpy")
 
     def test_asnumpy_from_cupy(self):
         import cupy
+
         arr = cupy.array([1.0, 2.0, 3.0])
         result = npw.asnumpy(arr)
         assert isinstance(result, np.ndarray)
@@ -292,16 +296,19 @@ class TestCupyInterop:
 
     def test_fromcpu_to_cupy(self):
         import cupy
+
         host = np.array([1.0, 2.0])
         result = npw.fromcpu(host)
         assert isinstance(result, cupy.ndarray)
 
     def test_isarray_cupy_true(self):
         import cupy
+
         assert npw.isarray(cupy.array([1, 2])) is True
 
     def test_roundtrip_cupy(self):
         import cupy
+
         host = np.array([1.0, 2.0, 3.0], dtype=np.float32)
         gpu = npw.fromcpu(host)
         assert isinstance(gpu, cupy.ndarray)
@@ -313,10 +320,12 @@ class TestCupyInterop:
         """Standard numpy-like array creation should work via the wrapper."""
         arr = npw.array([1, 2, 3])
         import cupy
+
         assert isinstance(arr, cupy.ndarray)
 
     def test_cupy_linspace(self):
         import cupy
+
         result = npw.linspace(0, 1, 10)
         assert isinstance(result, cupy.ndarray)
         assert len(result) == 10

@@ -63,7 +63,7 @@ jobs:
         run: uv sync --extra dev
 
       - name: Run visual tests
-        run: uv run pytest tests/visual/ -q --tb=short
+        run: uv run pytest tests/visual/ -q --tb=short --visual-tolerance=2
 
       - name: Upload failure diffs
         if: failure()

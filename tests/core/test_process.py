@@ -281,7 +281,9 @@ def test_interleave_axis_wraps_and_dtype_from_first():
     assert np.array_equal(mixed, np.array([1, 4, 2, 5, 3, 6], dtype=np.int32))
 
     axis_wrapped = process.interleave(np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]]), axis=2)
-    assert np.array_equal(axis_wrapped, process.interleave(np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]]), axis=0))
+    assert np.array_equal(
+        axis_wrapped, process.interleave(np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]]), axis=0)
+    )
 
 
 def test_bound_clip_and_wrap_inclusive():
@@ -378,6 +380,7 @@ def test_attach_position_index_offsets_and_validation():
 # Exhaustive group pad-mode tests
 # =============================================================================
 
+
 def test_group_1d_last_pad_mode():
     result = process.group([1, 2, 3], groupSize=2, padMode="last")
     assert np.array_equal(result, np.array([[1, 2], [3, 3]], dtype=float))
@@ -435,6 +438,7 @@ def test_group_nd_value_axis1():
 # =============================================================================
 # Exhaustive interpolate mode/shape tests
 # =============================================================================
+
 
 def test_interpolate_pairwise_cycling():
     """Multiple t values cycle across segments."""

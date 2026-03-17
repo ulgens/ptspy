@@ -1,4 +1,5 @@
 """Color helpers and palettes built on HCL color space"""
+
 from .elements import P, P3, partial, toPArray
 from .geom import TWO_PI
 from .util import toARGBInt
@@ -50,6 +51,7 @@ def _gamutMapSoft(rgb, threshold=0.85, strength=1.5, chromaFallback=True):
     Returns:
         RGB array with values in [0, 1]
     """
+
     def _softShoulder(x, t, s):
         # Separate handling for different regions
         above1 = x > 1  # Out of gamut (overflow)
@@ -88,9 +90,14 @@ def _gamutMapSoft(rgb, threshold=0.85, strength=1.5, chromaFallback=True):
     return np.clip(mapped, 0, 1)
 
 
-def _lab2rgb(lab, illuminant: str = "D65", observer: Literal["2", "10", "R"] = "10",
-             gamutMap: Literal["soft", "clip"] = "soft", gamutThreshold: float = 0.85,
-             gamutStrength: float = 1.5):
+def _lab2rgb(
+    lab,
+    illuminant: str = "D65",
+    observer: Literal["2", "10", "R"] = "10",
+    gamutMap: Literal["soft", "clip"] = "soft",
+    gamutThreshold: float = 0.85,
+    gamutStrength: float = 1.5,
+):
     """LAB → sRGB conversion with configurable illuminant, observer, and gamut mapping."""
     if illuminant not in _ILLUMINANTS:
         raise ValueError(f"Unknown illuminant '{illuminant}'. Valid: {list(_ILLUMINANTS.keys())}")
@@ -176,9 +183,14 @@ def cubeHCL(steps: int = 36, h_range=(0, TWO_PI), c_range=(0, 100), l_range=(0, 
     return P3(h_vals, c_vals, l_vals)
 
 
-def colorCube(steps=36, observer: Literal["2", "10", "R"] = "10", illuminant: str = "D65",
-              gamutMap: Literal["soft", "clip"] = "soft", gamutThreshold: float = 0.85,
-              gamutStrength: float = 1.5) -> IntArray:
+def colorCube(
+    steps=36,
+    observer: Literal["2", "10", "R"] = "10",
+    illuminant: str = "D65",
+    gamutMap: Literal["soft", "clip"] = "soft",
+    gamutThreshold: float = 0.85,
+    gamutStrength: float = 1.5,
+) -> IntArray:
     """
     Generates a 3D cube of RGB integers by sampling the HCL color space (hue, chroma, and lightness).
 
@@ -217,8 +229,14 @@ def colorCube(steps=36, observer: Literal["2", "10", "R"] = "10", illuminant: st
     """
 
     hclGrid = cubeHCL(steps)  # (n, n, n, 3) with axes (H, C, L)
-    rgbFloat = _lab2rgb(_hcl2lab(hclGrid), illuminant=illuminant, observer=observer,
-                        gamutMap=gamutMap, gamutThreshold=gamutThreshold, gamutStrength=gamutStrength)
+    rgbFloat = _lab2rgb(
+        _hcl2lab(hclGrid),
+        illuminant=illuminant,
+        observer=observer,
+        gamutMap=gamutMap,
+        gamutThreshold=gamutThreshold,
+        gamutStrength=gamutStrength,
+    )
 
     rgbU8 = np.clip(np.rint(rgbFloat * 255.0), 0, 255).astype(np.uint8)
     r, g, b = (rgbU8[..., 0].astype(np.uint32), rgbU8[..., 1].astype(np.uint32), rgbU8[..., 2].astype(np.uint32))
@@ -228,7 +246,14 @@ def colorCube(steps=36, observer: Literal["2", "10", "R"] = "10", illuminant: st
 
 
 @partial(optional=True)
-def colorInterpolation(cube: IntArray, start: NumberSequenceND, end: NumberSequenceND, steps: int = 10, asPath: bool = True, includeEnd: bool = True) -> IntArray:
+def colorInterpolation(
+    cube: IntArray,
+    start: NumberSequenceND,
+    end: NumberSequenceND,
+    steps: int = 10,
+    asPath: bool = True,
+    includeEnd: bool = True,
+) -> IntArray:
     """
     Interpolates between two colors in a color cube.
 
@@ -268,7 +293,7 @@ def colorInterpolation(cube: IntArray, start: NumberSequenceND, end: NumberSeque
         raise ValueError("steps must be a positive integer")
 
     startArr = np.asarray(start, dtype=np.intp)
-    endArr   = np.asarray(end,   dtype=np.intp)
+    endArr = np.asarray(end, dtype=np.intp)
 
     if startArr.shape[-1] != 3 or endArr.shape[-1] != 3:
         raise ValueError("start/end must have last dimension == 3")
@@ -296,14 +321,14 @@ def colorInterpolation(cube: IntArray, start: NumberSequenceND, end: NumberSeque
         # reshape t → (1,…,1,L,1) so it broadcasts over batch dims and channel dim
         t = t.reshape((1,) * (startB.ndim - 1) + (nPts, 1))
 
-        diff = (endB - startB)[..., None, :]          # … × 1 × 3
-        idx  = np.round(startB[..., None, :] + t * diff).astype(np.intp)
+        diff = (endB - startB)[..., None, :]  # … × 1 × 3
+        idx = np.round(startB[..., None, :] + t * diff).astype(np.intp)
 
         # idx order is (hue, chroma, lightness) matching cube axes
         return cube[idx[..., 0], idx[..., 1], idx[..., 2]]
 
     # as sub-cube
-    estBytes = np.prod(startB.shape[:-1], dtype=int) * (nPts ** 3) * cube.itemsize
+    estBytes = np.prod(startB.shape[:-1], dtype=int) * (nPts**3) * cube.itemsize
     if estBytes > 1 << 24:  # if more than 16 MiB
         warnings.warn(
             "colorInterpolation(asPath=False): dense allocation "
@@ -315,16 +340,13 @@ def colorInterpolation(cube: IntArray, start: NumberSequenceND, end: NumberSeque
 
     # build integer linspaces directly, one per axis (H, C, L order)
     hue = np.round(
-        np.linspace(startB[..., 0][..., None], endB[..., 0][..., None],
-                    nPts, endpoint=includeEnd, axis=-1)
+        np.linspace(startB[..., 0][..., None], endB[..., 0][..., None], nPts, endpoint=includeEnd, axis=-1)
     ).astype(np.intp)
     chroma = np.round(
-        np.linspace(startB[..., 1][..., None], endB[..., 1][..., None],
-                    nPts, endpoint=includeEnd, axis=-1)
+        np.linspace(startB[..., 1][..., None], endB[..., 1][..., None], nPts, endpoint=includeEnd, axis=-1)
     ).astype(np.intp)
     lightness = np.round(
-        np.linspace(startB[..., 2][..., None], endB[..., 2][..., None],
-                    nPts, endpoint=includeEnd, axis=-1)
+        np.linspace(startB[..., 2][..., None], endB[..., 2][..., None], nPts, endpoint=includeEnd, axis=-1)
     ).astype(np.intp)
 
     # broadcast to full grid with axes (hue, chroma, lightness)
@@ -332,7 +354,7 @@ def colorInterpolation(cube: IntArray, start: NumberSequenceND, end: NumberSeque
 
 
 @partial(optional=True)
-def colorPicker(cube: IntArray,  hue: float, chroma: float, lightness: float, asArray: bool = False):
+def colorPicker(cube: IntArray, hue: float, chroma: float, lightness: float, asArray: bool = False):
     """
     Pick a color from a color cube using normalized hue, chroma, and lightness.
 
@@ -428,7 +450,9 @@ def colorScheme(
 
 
 @partial(optional=True)
-def gradient(pts: PArray, colors: List[ColorLike], kind: GradientStyle = "linear", stops: Optional[NumberSequence1D] = None):
+def gradient(
+    pts: PArray, colors: List[ColorLike], kind: GradientStyle = "linear", stops: Optional[NumberSequence1D] = None
+):
     """
     Creates a gradient shader based on the specified kind and color stops. You can then use [Form.fill](Form.fill) to fill the gradient.
 
@@ -474,9 +498,7 @@ def gradient(pts: PArray, colors: List[ColorLike], kind: GradientStyle = "linear
             raise ValueError("radial gradient needs centre and radius point")
         centre, edge = cpuPts
         radius = math.hypot(*(edge - centre))
-        return skia.GradientShader.MakeRadial(
-            skia.Point(*centre), radius, argbColors, stops
-        )
+        return skia.GradientShader.MakeRadial(skia.Point(*centre), radius, argbColors, stops)
 
     if kind == "sweep":
         cx, cy = cpuPts[0]
@@ -487,8 +509,6 @@ def gradient(pts: PArray, colors: List[ColorLike], kind: GradientStyle = "linear
             raise ValueError("conical gradient needs two centre points")
         start, end = map(lambda p: skia.Point(*p), cpuPts)
         r1 = math.hypot(*(cpuPts[1] - cpuPts[0]))
-        return skia.GradientShader.MakeTwoPointConical(
-            start, 0.0, end, r1, argbColors, stops
-        )
+        return skia.GradientShader.MakeTwoPointConical(start, 0.0, end, r1, argbColors, stops)
 
     raise ValueError(f"Unknown gradient type '{kind}'")

@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from ptspy.core import geom
-from ptspy.core.elements import P, toPArray, TBD
+from ptspy.core.elements import P
 
 
 def test_degree_radian_conversions_roundtrip():
@@ -50,6 +50,7 @@ def test_rectangle_helpers_and_validation():
 
 
 # --- Rectangle.strips tests ---
+
 
 def test_strips_scalar_equal():
     """Scalar ratio=0.25 gives 4 equal vertical strips."""
@@ -146,6 +147,7 @@ def test_circle_from_center():
 
 # --- cardinalToBezier tests ---
 
+
 def test_cardinalToBezier_basic():
     pts = np.array([[0, 0], [10, 20], [30, 10], [50, 30]], dtype=float)
     result = geom.cardinalToBezier(pts)
@@ -204,6 +206,7 @@ def test_cardinalToBezier_minPoints():
 
 # --- sampleCardinal tests ---
 
+
 def test_sampleCardinal_onControlPoints():
     """Sampled curve at segment boundaries should pass through the original control points."""
     pts = np.array([[0, 0], [10, 20], [30, 10], [50, 30]], dtype=float)
@@ -217,8 +220,9 @@ def test_sampleCardinal_onControlPoints():
     # Segment 0 ends at index numSamples, segment 1 ends at 2*numSamples, etc.
     for i in range(1, len(pts) - 1):
         boundary_idx = i * numSamples
-        assert np.allclose(samples[boundary_idx], pts[i], atol=1e-3), \
+        assert np.allclose(samples[boundary_idx], pts[i], atol=1e-3), (
             f"Boundary {i}: expected {pts[i]}, got {samples[boundary_idx]}"
+        )
 
 
 def test_sampleCardinal_closed():
@@ -229,6 +233,7 @@ def test_sampleCardinal_closed():
 
 
 # --- sampleBezier tests ---
+
 
 def test_sampleBezier_straightLine():
     """Bezier with collinear control points → sampled points are collinear."""
@@ -241,8 +246,7 @@ def test_sampleBezier_straightLine():
 
 def test_sampleBezier_endpoints():
     """First/last sampled point match first/last Bezier anchor."""
-    pts = np.array([[0, 0], [5, 20], [15, -10], [20, 5],
-                    [25, 15], [35, 0], [40, 10]], dtype=float)
+    pts = np.array([[0, 0], [5, 20], [15, -10], [20, 5], [25, 15], [35, 0], [40, 10]], dtype=float)
     samples = geom.sampleBezier(pts, numSamples=10)
     assert np.allclose(samples[0], pts[0], atol=1e-3)
     # Last anchor is pts[3] for first segment, pts[6] for second
@@ -250,6 +254,7 @@ def test_sampleBezier_endpoints():
 
 
 # --- hermiteToBezier tests ---
+
 
 def test_hermiteToBezier_basic():
     """4 points + tangents → correct shape, first/last match."""
@@ -308,6 +313,7 @@ def test_hermiteToBezier_matchesCardinal():
 
 # --- bsplineToBezier tests ---
 
+
 def test_bsplineToBezier_basic():
     pts = np.array([[0, 0], [10, 20], [30, 10], [50, 30], [70, 5]], dtype=float)
     result = geom.bsplineToBezier(pts)
@@ -361,6 +367,7 @@ def test_bsplineToBezier_continuity():
 
 # --- sampleBspline tests ---
 
+
 def test_sampleBspline_endpoints():
     """First and last sampled points match expected B-spline boundary values."""
     pts = np.array([[0, 0], [10, 20], [30, 10], [50, 30], [70, 5]], dtype=float)
@@ -404,8 +411,7 @@ def test_sampleBspline_shape():
 def test_sampleBezier_shape():
     """Verify output shape given numSamples and segment count."""
     # 1 + 6 remaining → 2 segments (groups of 3)
-    pts = np.array([[0, 0], [1, 2], [3, 4], [5, 0],
-                    [7, 2], [9, 4], [10, 0]], dtype=float)
+    pts = np.array([[0, 0], [1, 2], [3, 4], [5, 0], [7, 2], [9, 4], [10, 0]], dtype=float)
     numSamples = 15
     samples = geom.sampleBezier(pts, numSamples=numSamples)
     # 2 segments × numSamples (endpoint=False each) + 1 final endpoint
@@ -413,6 +419,7 @@ def test_sampleBezier_shape():
 
 
 # --- translate2D tests ---
+
 
 def test_translate2D_single_point():
     result = geom.translate2D(P(1, 2), P(10, 20))
@@ -441,6 +448,7 @@ def test_translate2D_partial():
 
 
 # --- rotate2D tests ---
+
 
 def test_rotate2D_quarter_turn():
     result = geom.rotate2D(P(1, 0), geom.HALF_PI)
@@ -488,6 +496,7 @@ def test_rotate2D_partial():
 
 # --- scale2D tests ---
 
+
 def test_scale2D_uniform():
     result = geom.scale2D(P(2, 3), 3)
     assert np.allclose(result, [6, 9])
@@ -530,6 +539,7 @@ def test_scale2D_grid():
 # --- skew2D tests ---
 
 # --- reflect2D tests ---
+
 
 def test_reflect2D_across_x_axis():
     # angle=0 reflects across x-axis: (1, 1) → (1, -1)
@@ -624,6 +634,7 @@ def test_skew2D_batch():
 
 # --- transform2D tests ---
 
+
 def test_transform2D_identity_2x2():
     pt = P(3, 4)
     result = geom.transform2D(pt, np.eye(2))
@@ -632,25 +643,20 @@ def test_transform2D_identity_2x2():
 
 def test_transform2D_rotation_2x2():
     angle = geom.HALF_PI
-    matrix = np.array([[np.cos(angle), -np.sin(angle)],
-                        [np.sin(angle),  np.cos(angle)]], dtype=np.float32)
+    matrix = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]], dtype=np.float32)
     result = geom.transform2D(P(1, 0), matrix)
     assert np.allclose(result, [0, 1], atol=1e-6)
 
 
 def test_transform2D_affine_3x3():
     # Translation via affine matrix
-    matrix = np.array([[1, 0, 10],
-                        [0, 1, 20],
-                        [0, 0,  1]], dtype=np.float32)
+    matrix = np.array([[1, 0, 10], [0, 1, 20], [0, 0, 1]], dtype=np.float32)
     result = geom.transform2D(P(1, 2), matrix)
     assert np.allclose(result, [11, 22])
 
 
 def test_transform2D_affine_batch():
-    matrix = np.array([[2, 0, 1],
-                        [0, 2, 1],
-                        [0, 0, 1]], dtype=np.float32)
+    matrix = np.array([[2, 0, 1], [0, 2, 1], [0, 0, 1]], dtype=np.float32)
     pts = P([0, 0], [1, 1])
     result = geom.transform2D(pts, matrix)
     expected = P([1, 1], [3, 3])
@@ -658,9 +664,7 @@ def test_transform2D_affine_batch():
 
 
 def test_transform2D_affine_grid():
-    matrix = np.array([[1, 0, 5],
-                        [0, 1, 5],
-                        [0, 0, 1]], dtype=np.float32)
+    matrix = np.array([[1, 0, 5], [0, 1, 5], [0, 0, 1]], dtype=np.float32)
     grid = np.zeros((2, 3, 2), dtype=np.float32)
     result = geom.transform2D(grid, matrix)
     assert result.shape == (2, 3, 2)
@@ -680,6 +684,7 @@ def test_transform2D_partial():
 
 
 # --- Matrix2D tests ---
+
 
 def test_Matrix2D_identity():
     m = geom.Matrix2D()

@@ -14,6 +14,7 @@ source .venv/bin/activate
 Run:
     python examples/interactive_gl_demo.py
 """
+
 import glfw
 from OpenGL import GL
 import skia
@@ -89,8 +90,11 @@ def main():
     fbInfo = skia.GrGLFramebufferInfo(0, GL.GL_RGBA8)
     target = skia.GrBackendRenderTarget(WIDTH, HEIGHT, 0, 0, fbInfo)
     surface = skia.Surface.MakeFromBackendRenderTarget(
-        context, target, skia.kBottomLeft_GrSurfaceOrigin,
-        skia.kRGBA_8888_ColorType, skia.ColorSpace.MakeSRGB(),
+        context,
+        target,
+        skia.kBottomLeft_GrSurfaceOrigin,
+        skia.kRGBA_8888_ColorType,
+        skia.ColorSpace.MakeSRGB(),
     )
     assert surface, "Failed to create GL surface"
     canvas = surface.getCanvas()
