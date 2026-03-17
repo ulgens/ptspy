@@ -106,12 +106,6 @@ ruff format
 # Type checking (pyright configured in pyrightconfig.json)
 pyright
 
-# Build package artifacts
-python -m build
-
-# Verify README / metadata render correctly for PyPI
-twine check dist/*
-
 # Visual regression tests
 pytest tests/visual/                        # Run visual tests
 pytest tests/visual/ --update-groundtruth   # Add/replace groundtruth files
@@ -144,11 +138,11 @@ Use the benchmark mode in `tests.sh` to save and compare local performance basel
 ./tests.sh bench --compare
 
 # Compare against a named baseline
-./tests.sh bench --compare --with=barcelona_gpu_baseline
+./tests.sh bench --compare --with={name}
 
 # Fail if mean performance regresses by more than 8%
 ./tests.sh bench --compare --threshold=8%
-./tests.sh bench --compare --with=barcelona_gpu_baseline --threshold=8%
+./tests.sh bench --compare --with={name} --threshold=8%
 
 # Use a slower, more stable measurement mode for release verification
 ./tests.sh bench --save --precise
