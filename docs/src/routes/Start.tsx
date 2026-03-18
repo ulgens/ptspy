@@ -91,7 +91,7 @@ export function CodeExample({
 export default function Start() {
   return (
     <div className="prose mx-4 lg:mx-2 mt-8 max-w-prose ptspy-mdcontent">
-      <h1 className="mb-10 xl:mb-16 mt-[3rem] xl:mt-[6rem] font-medium text-[5rem] leading-[4.8rem] xl:text-[14rem] xl:leading-[13.5rem] ">
+      <h1 className="tracking-tighter mb-12 xl:mb-16 mt-[3rem] xl:mt-[6rem] font-medium text-[7rem] leading-[4.8rem] xl:text-[14rem] xl:leading-[13.5rem] ">
         Start
       </h1>
       <p>
@@ -131,7 +131,7 @@ export default function Start() {
         instructions.
       </p>
       {/* ONE */}
-      <h2 className="mt-12 mb-4">Make a point</h2>
+      <h2 className="mt-16 mb-4">Make a point</h2>
       <p>Begin from the beginning, let's begin with a point.</p>
       <p>
         Ptspy makes things simple. To create an image, you start with a function
@@ -197,7 +197,7 @@ mediapy.show_video(video, codec="h264", fps=30)`.trimStart()}
         <ImagePreview src={asset_03} alt="point animation" isVideo />
       </CodeExample>
       {/* FOUR */}
-      <h2 className="mt-12 mb-4">Connect the dots</h2>
+      <h2 className="mt-16 mb-4">Connect the dots</h2>
       <p>
         A point is the simplest representation of a concept. The meaning of a
         point depends on the definition of a space. To create points in
@@ -303,7 +303,7 @@ mediapy.show_video(video, codec="h264", fps=10)`.trimStart()}
       </CodeExample>
 
       {/* FIFTEEN */}
-      <h2 className="mt-12 mb-4">Form follows function()</h2>
+      <h2 className="mt-16 mb-4">Form follows function()</h2>
       <p>
         How do we make a visual structure in code? We use functions to compose
         it, and we use functions to change it. Instead of thinking inputs and
@@ -362,7 +362,7 @@ mediapy.show_video(video, codec="h264", fps=30)`.trimStart()}
       </CodeExample>
 
       {/* SEVENTEEN */}
-      <h2 className="mt-12 mb-4">Partial functions</h2>
+      <h2 className="mt-16 mb-4">Partial functions</h2>
       <p>
         Most of the functions in ptspy can be applied partially. There's also a
         convenient
@@ -411,7 +411,7 @@ mediapy.show_video(video, codec="h264", fps=30)`.trimStart()}
         ideas.{" "}
       </p>
 
-      <h2 className="mt-12 mb-4">Sequence of functions</h2>
+      <h2 className="mt-16 mb-4">Sequence of functions</h2>
 
       <p>
         Another common functional practice is that of a pipeline, often
@@ -547,7 +547,7 @@ mediapy.show_video(video, codec="h264", fps=30)`.trimStart()}
       </CodeExample>
 
       {/* NINE */}
-      <h2 className="mt-12 mb-4">Find the right colors</h2>
+      <h2 className="mt-16 mb-4">Find the right colors</h2>
       <p>
         Color spaces are unintuitive and color choices are subjective. How do we
         make it easier?
@@ -689,7 +689,7 @@ draw()`.trimStart()}
       </CodeExample>
 
       {/* ADVANCED TOPICS */}
-      <h2 className="mt-12 mb-4">Advanced Topics</h2>
+      <h2 className="mt-16 mb-4">Advanced Topics</h2>
       <p>
         Pts.py is built with{" "}
         <a href="https://numpy.org/" target="_blank" rel="noopener noreferrer">

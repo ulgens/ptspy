@@ -300,17 +300,17 @@ export default function Stamps() {
 
   return (
     <>
-      <div className="prose mx-8 xl:mx-2 mt-8 max-w-prose">
-        <h1 className="lg:ml-[-1rem] lg:tracking-tighter mb-10 lg:mb-16 mt-[3rem] lg:mt-[6rem] font-medium text-[5rem] leading-[4.8rem] lg:text-[14rem] lg:leading-[13.5rem] ">
+      <div className="prose mx-4 xl:mx-2 mt-8 max-w-prose">
+        <h1 className="lg:text-center lg:text-left lg:ml-[-1rem] tracking-tighter mb-10 lg:mb-16 mt-[3rem] lg:mt-[6rem] font-medium text-[6.5rem] leading-[4.8rem] lg:text-[14rem] lg:leading-[13.5rem] ">
           Demos
         </h1>
-        <h3 className="text-center">
+        <h3 className="lg:text-center leading-[1.35] mx-2 lg:mx-0">
           Here we set out on a long journey full of adventures. Along the way, I
           made some discoveries and some stamps for the postcards to send home.
         </h3>
       </div>
 
-      <div className="lg:my-24 my-16 leading-[0px] grid grid-cols-1 lg:grid-cols-3 max-w-[1220px] mx-auto px-4 lg:px-2">
+      <div className="lg:my-24 my-16 leading-[0px] grid grid-cols-1 lg:grid-cols-3 max-w-[1220px] mx-auto px-2">
         <Stamp asset={asset0} onClick={() => openModal(asset0)} />
         <Stamp asset={asset1} onClick={() => openModal(asset1)} />
         <Stamp asset={asset2} onClick={() => openModal(asset2)} />

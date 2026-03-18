@@ -86,6 +86,12 @@ export default {
             letterSpacing: "0.01rem",
             fontSize: "1.5rem",
           },
+          p: {
+            fontSize: "1.15rem",
+            "@screen lg": {
+              fontSize: "1.3rem",
+            },
+          },
           a: {
             textDecoration: "underline",
             "&:hover": {

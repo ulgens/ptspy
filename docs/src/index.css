@@ -29,6 +29,16 @@
     font-family: "Lexend", "Atkinson Hyperlegible Next", sans-serif;
   }
 
+  /* Fix iOS Safari modal height — 100vh doesn't account for browser chrome */
+  .modal {
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+  }
+
+  .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+
   /* Override daisyui styles */
   .ptspy-main-menu .menu-active,
   .ptspy-main-menu .menu-active:hover,
@@ -71,7 +81,7 @@
   }
 
   .ptspy-mdcontent p {
-    @apply leading-5;
-    @apply mb-4;
+    line-height: 1.4;
+    @apply mb-6;
   }
 }
