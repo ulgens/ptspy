@@ -5,8 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Home() {
   return (
     <>
-      <div className="prose-sm lg:prose mt-8 max-w-[48rem] leading-snug mx-6">
-        <h1 className="font-semibold text-center xl:mb-12 mb-8">
+      <div className="prose-sm lg:prose mt-8 max-w-[48rem] leading-snug mx-6 lg:pt-16 pt-8">
+        <h1 className="font-semibold text-center xl:mb-12 mb-8 tracking-tight">
           Pts.py is an experimental library for visual thinking
         </h1>
         <div className="mb-20 flex items-center justify-center ">
@@ -14,8 +14,7 @@ export default function Home() {
         </div>
         <h3 className="mt-12">
           A vision appears. It twinkles in the vast space of imagination. We
-          squint to connect the dots, looking for hidden relationships in a sky
-          full of stars.
+          squint to connect the dots in a sky full of stars.
         </h3>
       </div>
       <div className="w-full max-w-[56rem] mx-auto mt-12 aspect-square bg-gray-200 overflow-hidden lg:rounded-xl">
@@ -30,12 +29,11 @@ export default function Home() {
       </div>
       <div className="prose-sm lg:prose max-w-[48rem] leading-snug mx-6">
         <h3 className="mt-12">
-          Can we translate abstract thinking into visual primitives, and expand
+          Can we express abstract thinking through visual primitives and expand
           them through code? Does form follow <em>function()</em>?
         </h3>
         <h3 className="mt-12">
-          Let's ponder the multiplicity of concepts and forms with a new
-          mindset.
+          Let's ponder the multiplicity of ideas and forms with a new mindset.
         </h3>
         <h3 className="mt-12">
           I started this series of explorations, first with an idea about a
