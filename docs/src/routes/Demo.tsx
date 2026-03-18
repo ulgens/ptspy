@@ -325,7 +325,7 @@ export default function Stamps() {
       <dialog ref={modalRef} className="modal">
         <div className="modal-box max-w-full lg:max-w-[75rem] bg-gray-200 rounded-3xl lg:p-16 p-8 relative">
           <form method="dialog">
-            <button className="btn btn-circle border-none btn-ghost absolute lg:right-4 right-2 lg:top-4 top-2 border-none">
+            <button className="btn btn-circle border-none btn-ghost absolute lg:right-4 right-2 lg:top-4 top-2 border-none focus:outline-none">
               <Close size={32} />
             </button>
           </form>
