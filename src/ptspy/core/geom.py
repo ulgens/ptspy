@@ -4,7 +4,7 @@ from ptspy.typing import NumberSequence1D, NumberSequence2D, PArray, NumberSeque
 from .elements import P, partial, toPArray, TBD
 from .. import np_wrapper as np
 from types import SimpleNamespace
-from typing import Optional, cast
+from typing import cast
 
 from math import sqrt
 
@@ -133,7 +133,7 @@ def translate2D(pts: NumberSequenceND, offset: NumberSequenceND) -> PArray:
 
 
 @partial(optional=True, placeholder=TBD)
-def rotate2D(pts: NumberSequenceND, angle: float, origin: Optional[NumberSequenceND] = None) -> PArray:
+def rotate2D(pts: NumberSequenceND, angle: float, origin: NumberSequenceND | None = None) -> PArray:
     """
     Rotate 2D points clockwise by an angle in radians (screen coordinates, +y down).
 
@@ -166,7 +166,7 @@ def rotate2D(pts: NumberSequenceND, angle: float, origin: Optional[NumberSequenc
 
 
 @partial(optional=True, placeholder=TBD)
-def scale2D(pts: NumberSequenceND, factor: NumberSequenceND, origin: Optional[NumberSequenceND] = None) -> PArray:
+def scale2D(pts: NumberSequenceND, factor: NumberSequenceND, origin: NumberSequenceND | None = None) -> PArray:
     """
     Scale 2D points by a factor from an origin.
 
@@ -191,7 +191,7 @@ def scale2D(pts: NumberSequenceND, factor: NumberSequenceND, origin: Optional[Nu
 
 
 @partial(optional=True, placeholder=TBD)
-def skew2D(pts: NumberSequenceND, shear: NumberSequenceND, origin: Optional[NumberSequenceND] = None) -> PArray:
+def skew2D(pts: NumberSequenceND, shear: NumberSequenceND, origin: NumberSequenceND | None = None) -> PArray:
     """
     Skew (shear) 2D points by factors [sx, sy].
 
@@ -223,7 +223,7 @@ def skew2D(pts: NumberSequenceND, shear: NumberSequenceND, origin: Optional[Numb
 
 
 @partial(optional=True, placeholder=TBD)
-def reflect2D(pts: NumberSequenceND, angle: float = 0, origin: Optional[NumberSequenceND] = None) -> PArray:
+def reflect2D(pts: NumberSequenceND, angle: float = 0, origin: NumberSequenceND | None = None) -> PArray:
     """
     Reflect 2D points across a line through the origin (or a given point) at the specified angle.
 
@@ -303,7 +303,7 @@ def _translateM(offset: PArray) -> PArray:
     return m
 
 
-def _originWrap(m: PArray, origin: Optional[NumberSequenceND]) -> PArray:
+def _originWrap(m: PArray, origin: NumberSequenceND | None) -> PArray:
     """Wrap a transform matrix with translate-to-origin and back."""
     if origin is None:
         return m
@@ -343,7 +343,7 @@ class Matrix2D:
         self._m = _translateM(toPArray(offset, gpu=True)) @ self._m
         return self
 
-    def rotate(self, angle: float, origin: Optional[NumberSequenceND] = None) -> "Matrix2D":
+    def rotate(self, angle: float, origin: NumberSequenceND | None = None) -> "Matrix2D":
         """
         Rotate clockwise (in screen space) by angle in radians.
 
@@ -359,7 +359,7 @@ class Matrix2D:
         self._m = _originWrap(r, origin) @ self._m
         return self
 
-    def scale(self, factor: NumberSequenceND, origin: Optional[NumberSequenceND] = None) -> "Matrix2D":
+    def scale(self, factor: NumberSequenceND, origin: NumberSequenceND | None = None) -> "Matrix2D":
         """
         Scale uniformly by a scalar or non-uniformly by `[sx, sy]`.
 
@@ -378,7 +378,7 @@ class Matrix2D:
         self._m = _originWrap(s, origin) @ self._m
         return self
 
-    def skew(self, shear: NumberSequenceND, origin: Optional[NumberSequenceND] = None) -> "Matrix2D":
+    def skew(self, shear: NumberSequenceND, origin: NumberSequenceND | None = None) -> "Matrix2D":
         """
         Skew by shear factors.
 
@@ -394,7 +394,7 @@ class Matrix2D:
         self._m = _originWrap(k, origin) @ self._m
         return self
 
-    def reflect(self, angle: float = 0, origin: Optional[NumberSequenceND] = None) -> "Matrix2D":
+    def reflect(self, angle: float = 0, origin: NumberSequenceND | None = None) -> "Matrix2D":
         """
         Reflect across a line at a given angle from the x-axis.
 

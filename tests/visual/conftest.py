@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 import numpy as np
 from pathlib import Path
-from typing import Callable, Optional
+from collections.abc import Callable
 from PIL import Image
 import skia
 
@@ -63,7 +63,7 @@ def _saveMp4(frames: np.ndarray, path: Path, fps: int = 10) -> None:
         subprocess.run(cmd, capture_output=True, check=True)
 
 
-def _compareArrays(actual: np.ndarray, expected: np.ndarray, tolerance: int = 0) -> tuple[bool, Optional[np.ndarray]]:
+def _compareArrays(actual: np.ndarray, expected: np.ndarray, tolerance: int = 0) -> tuple[bool, np.ndarray | None]:
     """Compare two arrays with optional tolerance. Returns (match, diff)."""
     if actual.shape != expected.shape:
         return False, None
@@ -83,7 +83,7 @@ def _compareArrays(actual: np.ndarray, expected: np.ndarray, tolerance: int = 0)
 
 def _compareSequences(
     actual: np.ndarray, expected: np.ndarray, tolerance: int = 0
-) -> tuple[bool, int, Optional[np.ndarray]]:
+) -> tuple[bool, int, np.ndarray | None]:
     """Compare video sequences frame by frame. Returns (match, failingFrame, diff)."""
     if actual.shape != expected.shape:
         return False, -1, None
@@ -146,7 +146,7 @@ def visualTest(request):
     )
     tolerance = request.config.getoption("--visual-tolerance", default=0)
 
-    def _test(drawFn: Callable, name: str, toleranceOverride: Optional[int] = None):
+    def _test(drawFn: Callable, name: str, toleranceOverride: int | None = None):
         tol = toleranceOverride if toleranceOverride is not None else tolerance
 
         # Generate actual output

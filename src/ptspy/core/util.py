@@ -3,7 +3,8 @@
 import numpy as _cpu_numpy  # Permanent reference to CPU numpy for Skia boundary operations
 from .. import np_wrapper as np
 
-from typing import Any, Optional, Union, Sequence
+from typing import Any
+from collections.abc import Sequence
 from numpy.typing import ArrayLike, NDArray
 from ptspy.typing import (
     NumberSequenceND,
@@ -232,7 +233,7 @@ def validateColorLike(value: ColorLike, *, name: str = "color") -> ColorLike:
     return value
 
 
-def pretty(arr: NumberSequenceND, header: Optional[str] = None, indent=0):
+def pretty(arr: NumberSequenceND, header: str | None = None, indent=0):
     """
     Format a multi-dimensional array into a readable string.
 
@@ -339,7 +340,7 @@ def toRGBA(argb: IntArrayOrScalar):
     return rgba
 
 
-def toARGB(rgba: IntArrayOrScalar, hasAlpha: bool = True) -> Union[int, np.ndarray]:
+def toARGB(rgba: IntArrayOrScalar, hasAlpha: bool = True) -> int | np.ndarray:
     """
     Converts an RGBA or RGB color value to ARGB format.
 
@@ -372,7 +373,7 @@ def toARGB(rgba: IntArrayOrScalar, hasAlpha: bool = True) -> Union[int, np.ndarr
     return (a << 24) | rgb
 
 
-def toARGBInt(*args: Union[int, ColorLike], hasAlpha: Optional[bool] = None) -> int:
+def toARGBInt(*args: int | ColorLike, hasAlpha: bool | None = None) -> int:
     """
     Converts a color represented as an RGBA integer, a string, or an array-like object into an ARGB integer
     suitable for use in `skia-python` functions.
@@ -452,7 +453,7 @@ def toARGBInt(*args: Union[int, ColorLike], hasAlpha: Optional[bool] = None) -> 
 
 
 @partial(optional=True)
-def getColor(cube: IntArray, indices: IntArray, alpha: Optional[int] = None) -> Union[int, IntArray]:
+def getColor(cube: IntArray, indices: IntArray, alpha: int | None = None) -> int | IntArray:
     """
     Retrieves a color from a 3D array of colors in HCL space at specified indices.
 

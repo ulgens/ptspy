@@ -8,18 +8,13 @@ from functools import wraps
 from inspect import iscoroutinefunction, isawaitable, iscoroutine
 from typing import (
     Any,
-    AsyncGenerator,
-    Callable,
-    Generator,
     ParamSpec,
     TypeVar,
-    Optional,
     Literal,
-    Sequence,
-    Union,
     cast,
     overload,
 )
+from collections.abc import AsyncGenerator, Callable, Generator, Sequence
 
 from .compose import toPArray, TBD
 from ptspy.typing import (
@@ -411,7 +406,7 @@ class StageFunction:
     __slots__ = ("fn", "_spec")
 
     @staticmethod
-    def _spec_from(obj: "StageFunction | Callable[..., Any]") -> _PipelineSpec:
+    def _spec_from(obj: StageFunction | Callable[..., Any]) -> _PipelineSpec:
         if isinstance(obj, StageFunction):
             return obj._spec
         return _spec_from_callable(obj)
@@ -445,7 +440,7 @@ class StageFunction:
         self.fn = fn
         self._spec = _spec_from_callable(fn)
 
-    def __rshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
+    def __rshift__(self, other: StageFunction | Callable[..., Any]) -> StageFunction:
         """
         Implements the right shift (>>) operator to compose two stage functions into a single pipeline.
         Args:
@@ -464,7 +459,7 @@ class StageFunction:
             )
         )
 
-    def __rrshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
+    def __rrshift__(self, other: StageFunction | Callable[..., Any]) -> StageFunction:
         """
         Implements the right-hand shift operator (>>) to compose stage functions into a pipeline.
         Args:
@@ -483,7 +478,7 @@ class StageFunction:
             )
         )
 
-    def __lshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
+    def __lshift__(self, other: StageFunction | Callable[..., Any]) -> StageFunction:
         """
         Implements the left shift (<<) operator to compose two stage functions into a new StageFunction with reversed pipeline order.
         Args:
@@ -502,7 +497,7 @@ class StageFunction:
             )
         )
 
-    def __rlshift__(self, other: "StageFunction | Callable[..., Any]") -> "StageFunction":
+    def __rlshift__(self, other: StageFunction | Callable[..., Any]) -> StageFunction:
         """
         Implements the reverse left shift operator (<<) to compose two stage functions in reverse order.
         Args:
@@ -589,7 +584,7 @@ def _getShapingTable() -> dict[str, ShapingFunction]:
     return {name: obj for name, obj in locals().items() if callable(obj) and name not in {"_power"}}
 
 
-def shapingFunction(id: ShapingMethod, params: Optional[Number | Sequence[Number]] = None) -> ShapingFunction:
+def shapingFunction(id: ShapingMethod, params: Number | Sequence[Number] | None = None) -> ShapingFunction:
     """
     Returns a shaping function based on the provided identifier.
 
@@ -1100,7 +1095,7 @@ def interpolate(
     *,
     asPath: bool = False,
     applyAll: bool = False,
-    shaping: Union[str, ShapingFunction] = "linear",
+    shaping: str | ShapingFunction = "linear",
     axis: int = 0,
     clamp: bool = True,
 ) -> PArrayOrScalar:
@@ -1292,7 +1287,7 @@ def pointsToRegions(
     return np.stack((start, end), axis=1)
 
 
-def attachPositionIndex(arr: PArray, offsets: Optional[NumberSequenceND] = None) -> PArray:
+def attachPositionIndex(arr: PArray, offsets: NumberSequenceND | None = None) -> PArray:
     """
     Get positional indices attached to each coordinate in the array.
 
