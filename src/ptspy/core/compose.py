@@ -4,7 +4,7 @@ from .elements import randomizer, toPArray, partial, TBD
 from .process import shapingFunction
 from ptspy.typing import PArrayOrScalar, PArrayLike, PArray, IntArrayOrScalar, NumberSequenceND, ShapingFunction
 from .. import np_wrapper as np
-from typing import cast, Union, Optional
+from typing import cast
 
 
 @partial(optional=True, placeholder=TBD)
@@ -52,7 +52,7 @@ def steps(
     end: NumberSequenceND,
     count: int,
     inclusive: bool = True,
-    shaping: Union[str, ShapingFunction] = "linear",
+    shaping: str | ShapingFunction = "linear",
 ) -> PArray:
     """
     Generate evenly spaced points between `start` and `end`.
@@ -184,11 +184,11 @@ def gridPoints(repeat: IntArrayOrScalar, spacing: PArrayOrScalar) -> PArray:
 
 @partial(optional=True, placeholder=TBD)
 def random(
-    shape: Optional[PArrayLike] = None,
+    shape: PArrayLike | None = None,
     max=1.0,
     min=0.0,
-    seed: Optional[int] = None,
-    rng: Optional[np.random.Generator] = None,
+    seed: int | None = None,
+    rng: np.random.Generator | None = None,
 ) -> PArray:
     """
     Create an array of random numbers within a specified range.
@@ -230,7 +230,7 @@ def random(
 
 @partial(optional=True, placeholder=TBD)
 def irregular(
-    maxValue: float, steps: int, rng: np.random.Generator = None, shaping: Union[str, ShapingFunction] = "linear"
+    maxValue: float, steps: int, rng: np.random.Generator = None, shaping: str | ShapingFunction = "linear"
 ) -> PArray:
     """
     Generate irregularly spaced numbers between 0 and a maximum value.

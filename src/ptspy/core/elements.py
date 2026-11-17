@@ -6,11 +6,8 @@ import inspect
 from .. import np_wrapper as np
 from typing import (
     Any,
-    Callable,
-    Optional,
-    Dict,
-    Tuple,
 )
+from collections.abc import Callable
 
 
 # Create a sentinel type that can represent any type for partial function placeholders
@@ -89,7 +86,7 @@ def partial(
 
         # -------- helpers --------------------------------------------------
 
-        def mergeKeywords(base: Dict[str, Any], inc: Dict[str, Any]) -> Dict[str, Any]:
+        def mergeKeywords(base: dict[str, Any], inc: dict[str, Any]) -> dict[str, Any]:
             dup = set(base) & set(inc)
             if dup:
                 raise TypeError(
@@ -97,7 +94,7 @@ def partial(
                 )
             return {**base, **inc}
 
-        def fillPlaceholders(existing: Tuple[Any, ...], incoming: Tuple[Any, ...]) -> Tuple[Any, ...]:
+        def fillPlaceholders(existing: tuple[Any, ...], incoming: tuple[Any, ...]) -> tuple[Any, ...]:
             """Replace placeholders in positional args with incoming values."""
             if not use_ph:
                 return existing + incoming
@@ -113,7 +110,7 @@ def partial(
             out.extend(it)
             return tuple(out)
 
-        def fillKeywordPlaceholders(existing: Dict[str, Any], incoming: Dict[str, Any]) -> Dict[str, Any]:
+        def fillKeywordPlaceholders(existing: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
             """Replace keyword placeholders and merge non-conflicting keywords."""
             if not use_ph:
                 return mergeKeywords(existing, incoming)
@@ -135,12 +132,12 @@ def partial(
 
             return result
 
-        def hasPlaceholdersLeft(a: Tuple[Any, ...], kw: Dict[str, Any]) -> bool:
+        def hasPlaceholdersLeft(a: tuple[Any, ...], kw: dict[str, Any]) -> bool:
             if not use_ph:
                 return False
             return any(x is ph for x in a) or any(v is ph for v in kw.values())
 
-        def ready(a: Tuple[Any, ...], kw: Dict[str, Any]) -> bool:
+        def ready(a: tuple[Any, ...], kw: dict[str, Any]) -> bool:
             """Check if we have enough arguments to execute the function."""
             if hasPlaceholdersLeft(a, kw):
                 return False
@@ -152,7 +149,7 @@ def partial(
             supplied = set(bound.arguments)
             return required.issubset(supplied) if optional else non_variadic.issubset(supplied)
 
-        def makeCurry(a: Tuple[Any, ...], kw: Dict[str, Any]):
+        def makeCurry(a: tuple[Any, ...], kw: dict[str, Any]):
             @functools.wraps(fn)
             def _curried(*na, **nkw):
                 new_a = fillPlaceholders(a, na)
@@ -285,8 +282,8 @@ def toPArray(pts: NumberSequenceND, gpu: bool = False) -> PArray:
 
 
 def randomizer(
-    seed: Optional[int] = None,
-    rng: Optional[np.random.Generator] = None,
+    seed: int | None = None,
+    rng: np.random.Generator | None = None,
 ) -> np.random.Generator:
     """
     Initialize a random number generator with an optional seed and return it.

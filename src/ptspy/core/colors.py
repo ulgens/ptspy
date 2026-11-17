@@ -5,7 +5,7 @@ from .geom import TWO_PI
 from .util import toARGBInt
 from ptspy.typing import NumberSequence1D, PArray, IntArray, ColorLike, NumberSequenceND, GradientStyle
 from .. import np_wrapper as np
-from typing import List, Literal, Optional
+from typing import Literal
 
 import warnings
 import skia
@@ -451,7 +451,7 @@ def colorScheme(
 
 @partial(optional=True)
 def gradient(
-    pts: PArray, colors: List[ColorLike], kind: GradientStyle = "linear", stops: Optional[NumberSequence1D] = None
+    pts: PArray, colors: list[ColorLike], kind: GradientStyle = "linear", stops: NumberSequence1D | None = None
 ):
     """
     Creates a gradient shader based on the specified kind and color stops. You can then use [Form.fill](Form.fill) to fill the gradient.

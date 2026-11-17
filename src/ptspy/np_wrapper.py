@@ -2,7 +2,8 @@
 
 import importlib
 import warnings
-from typing import Callable, Any
+from typing import Any
+from collections.abc import Callable
 import numpy as _cpu_numpy  # Permanent reference to CPU numpy, independent of active backend
 
 # Default to numpy

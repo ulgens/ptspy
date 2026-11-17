@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Callable, Literal, Sequence, TypeAlias
+from typing import Literal, TypeAlias
+from collections.abc import Callable, Sequence
 
 import skia
 from numpy.typing import ArrayLike, NDArray

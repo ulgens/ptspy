@@ -73,3 +73,7 @@ target-version = "py310"
 
 [tool.ruff.lint]
 ignore = ["E741"]
+extend-select = [
+    # https://docs.astral.sh/ruff/rules/#pyupgrade-up
+    "UP",
+]

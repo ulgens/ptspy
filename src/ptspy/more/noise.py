@@ -16,7 +16,6 @@ Example:
 """
 
 from __future__ import annotations
-from typing import Optional, Tuple, Union
 
 from ptspy.typing import IntArrayOrList, NumberSequence1D, PArray
 from .. import np_wrapper as np
@@ -26,9 +25,9 @@ import skia
 
 def createPerlinNoise2D(
     size: IntArrayOrList,
-    seed: Optional[int] = None,
+    seed: int | None = None,
     *,
-    grads: Optional[np.ndarray] = None,
+    grads: np.ndarray | None = None,
 ) -> PerlinNoise:
     """
     Create a 2D Perlin noise generator with the specified grid size.
@@ -100,7 +99,7 @@ class PerlinNoise:
 
     __slots__ = ("grid", "perm", "grads", "seed")
 
-    def __init__(self, grid: PArray, perm: PArray, grads: PArray, seed: Optional[int]):
+    def __init__(self, grid: PArray, perm: PArray, grads: PArray, seed: int | None):
         self.grid = grid
         self.perm = perm
         self.grads = grads
@@ -112,12 +111,12 @@ class PerlinNoise:
     def __call__(
         self,
         offset: NumberSequence1D = [0.1, 0.1],
-        freq: Union[float, NumberSequence1D] = 1.0,
+        freq: float | NumberSequence1D = 1.0,
         *,
         octaves: int = 1,
         lacunarity: float = 2.0,
         gain: float = 0.5,
-        period: Optional[IntArrayOrList] = None,
+        period: IntArrayOrList | None = None,
         autoTile: bool = False,
     ) -> PArray:
         """Shorthand for `generate()` — accepts the same arguments."""
@@ -138,12 +137,12 @@ class PerlinNoise:
     def generate(
         self,
         offset: NumberSequence1D = [0.1, 0.1],
-        freq: Union[float, NumberSequence1D] = 1.0,
+        freq: float | NumberSequence1D = 1.0,
         *,
         octaves: int = 1,
         lacunarity: float = 2.0,
         gain: float = 0.5,
-        period: Optional[IntArrayOrList] = None,
+        period: IntArrayOrList | None = None,
         autoTile: bool = False,
     ):
         """
@@ -185,9 +184,9 @@ class PerlinNoise:
     def sample(
         self,
         pts: PArray,
-        freq: Union[float, NumberSequence1D] = 1.0,
+        freq: float | NumberSequence1D = 1.0,
         *,
-        period: Optional[IntArrayOrList] = None,
+        period: IntArrayOrList | None = None,
         autoTile: bool = False,
     ) -> PArray:
         """
@@ -228,12 +227,12 @@ class PerlinNoise:
     def sampleFBM(
         self,
         pts: PArray,
-        freq: Union[float, NumberSequence1D] = 1.0,
+        freq: float | NumberSequence1D = 1.0,
         *,
         octaves: int = 4,
         lacunarity: float = 2.0,
         gain: float = 0.5,
-        period: Optional[IntArrayOrList] = None,
+        period: IntArrayOrList | None = None,
         autoTile: bool = False,
     ) -> PArray:
         """
@@ -294,7 +293,7 @@ def _lerp(a: PArray, b: PArray, t: PArray) -> PArray:
     return a + t * (b - a)
 
 
-def _makePerm(seed: Optional[int]) -> PArray:
+def _makePerm(seed: int | None) -> PArray:
     """Build a permutation table: 256 entries shuffled, then duplicated to 512 to avoid index wrapping."""
     r = randomizer(seed)
     p = np.arange(256, dtype=np.int32)
@@ -318,7 +317,7 @@ def _dot2(g: PArray, dx: PArray, dy: PArray) -> PArray:
     return g[..., 0] * dx + g[..., 1] * dy
 
 
-def _asFreqTuple(freq) -> Tuple[float, float]:
+def _asFreqTuple(freq) -> tuple[float, float]:
     """Normalize freq to (fx, fy): accepts a scalar (applied to both axes) or a 2-element sequence."""
     return (freq, freq) if isinstance(freq, (int, float)) else freq
 
@@ -326,11 +325,11 @@ def _asFreqTuple(freq) -> Tuple[float, float]:
 def _perOctaveFreqAndPeriod(
     fx: float,
     fy: float,
-    basePeriod: Optional[IntArrayOrList],
+    basePeriod: IntArrayOrList | None,
     i: int,
     lacunarity: float,
     autoTile: bool,
-) -> Tuple[Tuple[float, float], Optional[IntArrayOrList]]:
+) -> tuple[tuple[float, float], IntArrayOrList | None]:
     """Compute per-octave freq and tiling period. When ``autoTile`` is True, the period scales with
     ``lacunarity**i`` so each octave tiles at an integer multiple of the base period, preserving seamless tiling."""
     if not autoTile:
@@ -345,7 +344,7 @@ def _perOctaveFreqAndPeriod(
     return (fx, fy), (px, py)
 
 
-def getPerlin2DGrid(w: int, h: int, domain: Tuple[float, float] = (0.0, 10.0)) -> PArray:
+def getPerlin2DGrid(w: int, h: int, domain: tuple[float, float] = (0.0, 10.0)) -> PArray:
     """
     Generate a 2D grid for Perlin noise sampling.
 
@@ -371,11 +370,11 @@ def getPerlin2DGrid(w: int, h: int, domain: Tuple[float, float] = (0.0, 10.0)) -
 def perlin2D(
     grid: PArray,
     *,
-    freq: Union[float, NumberSequence1D] = 1.0,
-    seed: Optional[int] = None,
-    period: Optional[IntArrayOrList] = None,
-    perm: Optional[PArray] = None,
-    grads: Optional[PArray] = None,
+    freq: float | NumberSequence1D = 1.0,
+    seed: int | None = None,
+    period: IntArrayOrList | None = None,
+    perm: PArray | None = None,
+    grads: PArray | None = None,
 ) -> PArray:
     """
     Vectorized 2D Perlin noise. Returns values in ~[-1, 1].

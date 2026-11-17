@@ -3,7 +3,8 @@
 import functools
 import numpy as _cpu_numpy  # Permanent reference to CPU numpy for Skia boundary operations
 from .. import np_wrapper as np
-from typing import Union, Any, Callable, Sequence, Optional, cast, Concatenate, ParamSpec, TypeVar, Tuple
+from typing import Any, cast, Concatenate, ParamSpec, TypeVar
+from collections.abc import Callable, Sequence
 from ptspy.typing import (
     ColorLike,
     StrokeJoinCap,
@@ -56,7 +57,7 @@ def _requireOpenGL() -> tuple[Any, Any]:
     return cast(Any, GL), cast(Any, glfw)
 
 
-def _coerceSize(size: Sequence[int]) -> Tuple[int, int]:
+def _coerceSize(size: Sequence[int]) -> tuple[int, int]:
     """Ensure a (w, h) of positive ints."""
     if len(size) < 2:
         raise ValueError("size must have at least two elements")
@@ -533,8 +534,8 @@ class Form:
 
         self.paint = skia.Paint(**self.paintParams)
         self.fontStyle = skia.Font(skia.Typeface("Arial"), 12)
-        self.fillColor: Optional[int] = 0x99AABBFF
-        self.strokeColor: Optional[int] = 0xFF3366FF
+        self.fillColor: int | None = 0x99AABBFF
+        self.strokeColor: int | None = 0xFF3366FF
 
     @property
     def width(self) -> int:
@@ -568,12 +569,12 @@ class Form:
 
     def stroke(
         self,
-        color: Optional[ColorOrShader] = None,
-        width: Optional[float] = None,
-        cap: Optional[StrokeJoinCap] = None,
-        join: Optional[StrokeJoinCap] = None,
-        miter: Optional[float] = None,
-        hasAlpha: Optional[bool] = None,
+        color: ColorOrShader | None = None,
+        width: float | None = None,
+        cap: StrokeJoinCap | None = None,
+        join: StrokeJoinCap | None = None,
+        miter: float | None = None,
+        hasAlpha: bool | None = None,
     ):
         """
         Configure stroke properties for subsequent drawing operations.
@@ -623,7 +624,7 @@ class Form:
         self.paint = skia.Paint(**self.paintParams)
         return self
 
-    def fill(self, color: Optional[ColorOrShader] = None, hasAlpha: Optional[bool] = None):
+    def fill(self, color: ColorOrShader | None = None, hasAlpha: bool | None = None):
         """
         Configure fill properties for subsequent drawing operations. Accepts a color value or a ``skia.Shader``.
         If no argument is provided, the fill color and shader are cleared (disables fill).
@@ -651,7 +652,7 @@ class Form:
             self.shaderParams["Fill"] = None
         return self
 
-    def fillOnly(self, color: Optional[ColorOrShader] = None, hasAlpha: Optional[bool] = None):
+    def fillOnly(self, color: ColorOrShader | None = None, hasAlpha: bool | None = None):
         """
         Set the fill color and disable the stroke for the form instance. See `fill` and `stroke` for details.
 
@@ -670,12 +671,12 @@ class Form:
 
     def strokeOnly(
         self,
-        color: Optional[ColorOrShader] = None,
-        width: Optional[float] = None,
-        cap: Optional[StrokeJoinCap] = None,
-        join: Optional[StrokeJoinCap] = None,
-        miter: Optional[float] = None,
-        hasAlpha: Optional[bool] = None,
+        color: ColorOrShader | None = None,
+        width: float | None = None,
+        cap: StrokeJoinCap | None = None,
+        join: StrokeJoinCap | None = None,
+        miter: float | None = None,
+        hasAlpha: bool | None = None,
     ):
         """
         Set the stroke color and disable the fill for the form instance. See `fill` and `stroke` for details.
@@ -909,7 +910,7 @@ class Form:
         self.canvas.drawRect(skia.Rect.MakeLTRB(pts[0][0], pts[0][1], pts[1][0], pts[1][1]), self.paint)
         return self
 
-    def rects(self, pts: Union[PArray, Sequence[NumberSequence2D]]):
+    def rects(self, pts: PArray | Sequence[NumberSequence2D]):
         """
         Draw multiple rectangles on the canvas.
 
@@ -964,7 +965,7 @@ class Form:
         self.canvas.drawOval(skia.Rect.MakeLTRB(pts[0][0], pts[0][1], pts[1][0], pts[1][1]), self.paint)
         return self
 
-    def circles(self, pts: Union[PArray, Sequence[NumberSequence2D]]):
+    def circles(self, pts: PArray | Sequence[NumberSequence2D]):
         """
         Draw multiple circles or ellipses inscribed in bounding rectangles. Each shape is defined by two diagonal corners.
 
@@ -992,11 +993,11 @@ class Form:
     def ellipse(
         self,
         pts: NumberSequence2D,
-        rotation: Optional[float] = None,
-        startAngle: Optional[float] = None,
-        endAngle: Optional[float] = None,
-        counterClockwise: Optional[bool] = False,
-        wedge: Optional[bool] = False,
+        rotation: float | None = None,
+        startAngle: float | None = None,
+        endAngle: float | None = None,
+        counterClockwise: bool | None = False,
+        wedge: bool | None = False,
     ):
         """
         Draw an ellipse on the canvas.
@@ -1042,12 +1043,12 @@ class Form:
 
     def ellipses(
         self,
-        pts: Union[PArray, Sequence[NumberSequence2D]],
-        rotation: Optional[float] = None,
-        startAngle: Optional[float] = None,
-        endAngle: Optional[float] = None,
-        counterClockwise: Optional[bool] = False,
-        wedge: Optional[bool] = False,
+        pts: PArray | Sequence[NumberSequence2D],
+        rotation: float | None = None,
+        startAngle: float | None = None,
+        endAngle: float | None = None,
+        counterClockwise: bool | None = False,
+        wedge: bool | None = False,
     ):
         """
         Draw multiple ellipses on the canvas.
@@ -1121,7 +1122,7 @@ class Form:
         return self
 
     @stroke_or_fill
-    def polygons(self, pts: Union[PArray, Sequence[NumberSequenceND]], closed: bool = True):
+    def polygons(self, pts: PArray | Sequence[NumberSequenceND], closed: bool = True):
         """
         Draw multiple polygons on the canvas in a single draw call.
 
@@ -1283,8 +1284,8 @@ class Form:
         name: str = "Arial",
         bold: bool = False,
         italic: bool = False,
-        weight: Optional[int] = None,
-        width: Optional[int] = None,
+        weight: int | None = None,
+        width: int | None = None,
     ):
         """
         Set the font style for text drawing.
@@ -1587,7 +1588,7 @@ class Form:
         self.canvas.translate(dx, dy)
         return self
 
-    def rotate(self, degrees: float, pivot: Optional[NumberSequence1D] = None) -> "Form":
+    def rotate(self, degrees: float, pivot: NumberSequence1D | None = None) -> "Form":
         """
         Rotate the canvas by degrees, optionally around a pivot point.
 
@@ -1611,7 +1612,7 @@ class Form:
             self.canvas.rotate(degrees)
         return self
 
-    def scale(self, sx: float, sy: Optional[float] = None) -> "Form":
+    def scale(self, sx: float, sy: float | None = None) -> "Form":
         """
         Scale the canvas by (sx, sy). If sy is None, scales uniformly by sx.
 
@@ -1709,7 +1710,7 @@ class Form:
         self.canvas.clipPath(path, clip_op, antialias)
         return self
 
-    def erase(self, region: Optional[skia.Path] = None) -> "Form":
+    def erase(self, region: skia.Path | None = None) -> "Form":
         """
         Erase pixels to fully transparent (both color and alpha) within the current clip region
         or a specified region. Useful for punching transparent holes in existing drawings.
